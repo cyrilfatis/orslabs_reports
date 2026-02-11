@@ -1,0 +1,346 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - ORS Labs{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+        .preview {
+            display: flex;
+            flex-direction: column;
+            width: 50vw;
+            align-items: center;
+            justify-content: center;
+            background: var(--warning);
+            margin: 0 auto 2.5rem;
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            padding: 3rem 0 2rem;
+        }
+
+        .dashboard-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .welcome-card h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .reports-section {
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            border-color: var(--accent);
+        }
+
+        .report-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .report-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .report-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .report-stat {
+            text-align: center;
+        }
+
+        .report-stat-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .report-stat-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="dashboard-header">
+    <h1 class="dashboard-title">Dashboard SEO</h1>
+    <p class="dashboard-subtitle">Vue d'ensemble de vos rapports mensuels</p>
+</div>
+
+<div class="welcome-card">
+    <h2>👋 Bonjour {{ user.firstName }} !</h2>
+    <p>Bienvenue sur votre tableau de bord SEO. Vous pouvez consulter ici l'historique complet de vos rapports mensuels et suivre l'évolution de vos performances.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Rapports disponibles</div>
+        <div class="stat-value">2</div>
+        <div class="stat-description">Novembre et Décembre 2025</div>
+    </div>
+    
+    <div class="stat-card" style="border-top-color: var(--success);">
+        <div class="stat-label">Dernier rapport</div>
+        <div class="stat-value">Déc 2025</div>
+        <div class="stat-description">Il y a quelques jours</div>
+    </div>
+    
+    <div class="stat-card" style="border-top-color: var(--warning);">
+        <div class="stat-label">Période couverte</div>
+        <div class="stat-value">2 mois</div>
+        <div class="stat-description">Nov - Déc 2025</div>
+    </div>
+</div>
+
+<div class="reports-section">
+    <h2 class="section-title">Rapports mensuels</h2>
+    <h3 class="preview">Graphique évolutif annuel prochainement disponible</h3>
+    
+    <div class="reports-grid">
+        <!-- Rapport Décembre 2025 -->
+        <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Décembre 2025')">
+            <div class="report-date">Décembre 2025</div>
+            <div class="report-meta">
+                <span>📅 01/12 - 31/12/2025</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Ralentissement temporaire dû aux effets saisonniers, mais amélioration notable de l'engagement.
+            </p>
+            <div class="report-stats">
+                <div class="report-stat">
+                    <div class="report-stat-value">19,222</div>
+                    <div class="report-stat-label">Impressions</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">208</div>
+                    <div class="report-stat-label">Sessions</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">1.30%</div>
+                    <div class="report-stat-label">CTR</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">Position 16</div>
+                    <div class="report-stat-label">Classement</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rapport Novembre 2025 -->
+        <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Novembre 2025')">
+            <div class="report-date">Novembre 2025</div>
+            <div class="report-meta">
+                <span>📅 01/11 - 30/11/2025</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Croissance continue du trafic organique et direct, avec une visibilité en amélioration.
+            </p>
+            <div class="report-stats">
+                <div class="report-stat">
+                    <div class="report-stat-value">17,910</div>
+                    <div class="report-stat-label">Impressions</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">261</div>
+                    <div class="report-stat-label">Sessions</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">1.70%</div>
+                    <div class="report-stat-label">CTR</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">Position 14</div>
+                    <div class="report-stat-label">Classement</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="reports-section">
+    <h2 class="section-title">Prochaines étapes</h2>
+    
+    <div class="welcome-card" style="border-left-color: var(--warning);">
+        <h2 style="color: var(--warning);">Actions recommandées</h2>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
+            <li><strong>Priorité 1 :</strong> Améliorer l'engagement et l'UX des pages</li>
+            <li><strong>Priorité 2 :</strong> Optimisation du CTR (titres et meta descriptions)</li>
+            <li><strong>Priorité 3 :</strong> Mise à jour de la page /outils/conversions-dhumidite/</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

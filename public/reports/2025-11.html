@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Monitoring - November 2025 | ORS Labs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #1E3A8A;
+            --primary-light: #3B82F6;
+            --accent: #06B6D4;
+            --accent-dark: #0891B2;
+            --surface: #FFFFFF;
+            --background: #F8FAFC;
+            --text-primary: #1E293B;
+            --theme: #062e57;
+            --theme-dark: #101b2c;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+            --success: #059669;
+            --warning: #F59E0B;
+            --danger: #DC2626;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            --gradient-vertical: linear-gradient(180deg, var(--theme) 0%, var(--primary-light) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 2rem 4rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            animation: fadeInUp 0.8s ease 0.6s backwards;
+        }
+
+        .hero-meta-item {
+            text-align: center;
+        }
+
+        .hero-meta-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .hero-meta-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Section */
+        section {
+            padding: 2rem 0;
+            animation: fadeIn 1s ease;
+            background: #062e57;
+        }
+
+        section:nth-child(even) {
+            background: #062e57;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-card.primary::before {
+            background: var(--gradient-primary);
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .kpi-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-change {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .kpi-change.positive {
+            color: var(--success);
+        }
+
+        .kpi-change.negative {
+            color: var(--danger);
+        }
+
+        .kpi-change.neutral {
+            color: var(--text-secondary);
+        }
+
+        /* Insight Box */
+        .insight-box {
+            background: #FEF3C7;
+            border-left: 4px solid var(--warning);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            animation: slideInLeft 0.6s ease;
+        }
+
+        .insight-box strong {
+            color: #92400E;
+            font-weight: 600;
+        }
+
+        .insight-box p {
+            color: #78350F;
+            margin: 0.5rem 0 0;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            overflow-y: visible;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin: 2rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .data-table table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--gradient-vertical);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-top-color: #06aecd !important;
+            border-top-style: solid;
+            border-top-width: 3px;
+        }
+
+        .data-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--background);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table .metric-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Priorities */
+        .priorities-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .priority-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            display: flex;
+            gap: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .priority-card:hover {
+            transform: translateX(8px);
+        }
+
+        .priority-number {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .priority-content h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .priority-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .priority-content .target {
+            background: var(--background);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        .priority-content .target strong {
+            color: var(--primary);
+        }
+
+        /* Conclusion */
+        .conclusion {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin: 3rem 0;
+        }
+
+        .conclusion h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .conclusion p {
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .conclusion strong {
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.9;
+            margin: 0.5rem 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .charts-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-meta {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .priority-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .conclusion {
+                padding: 2rem;
+            }
+
+            /* Amélioration tableaux responsive */
+            .data-table {
+                border-radius: 8px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            /* Amélioration graphiques responsive */
+            .chart-container {
+                padding: 1.5rem;
+            }
+
+            .chart-wrapper {
+                height: 250px;
+            }
+
+            /* Ajustement conteneurs */
+            .container {
+                padding: 0 1rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .hero {
+                padding: 4rem 1rem 3rem;
+            }
+
+            .insight-box {
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero .description {
+                font-size: 1rem;
+            }
+
+            .hero-meta-value {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .kpi-value {
+                font-size: 2.5rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.75rem;
+            }
+
+            .chart-container {
+                padding: 1rem;
+            }
+
+            .chart-container h4 {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .chart-wrapper {
+                height: 220px;
+            }
+
+            .priority-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .priority-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin: 2rem 0;
+        }
+
+        .chart-container h4 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+    </style>
+    <link rel="icon" href="https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_192,h_192/https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_180,h_180/https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png" />
+    <meta name="msapplication-TileImage" content="https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png" />
+</head>
+<body>
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">Oneida Research Services - SEO</div>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#traffic">Traffic</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="#priorities">Priorities</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>SEO Monitoring</h1>
+            <p class="subtitle">November 2025</p>
+            <p class="description">Comprehensive analysis of orslabs.fr organic search performance, traffic patterns, and strategic recommendations for Q1 2026</p>
+
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <span class="hero-meta-value">17,910</span>
+                    <span class="hero-meta-label">Total Impressions</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-value">+17%</span>
+                    <span class="hero-meta-label">Traffic Growth</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-value">Position 14</span>
+                    <span class="hero-meta-label">Avg Ranking</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview -->
+    <section id="overview">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Executive Summary</h2>
+                <p class="section-subtitle">Key performance indicators showing sustained growth across organic and direct channels</p>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-card primary">
+                    <div class="kpi-label">Organic Traffic</div>
+                    <div class="kpi-value">261</div>
+                    <div class="kpi-change positive">↑ 17% vs October</div>
+                </div>
+
+                <div class="kpi-card primary">
+                    <div class="kpi-label">Direct Traffic</div>
+                    <div class="kpi-value">484</div>
+                    <div class="kpi-change positive">↑ 17% vs October</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Impressions</div>
+                    <div class="kpi-value">17,910</div>
+                    <div class="kpi-change positive">↑ 7% vs October</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Clicks</div>
+                    <div class="kpi-value">305</div>
+                    <div class="kpi-change neutral">→ Stable</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Average CTR</div>
+                    <div class="kpi-value">1.70%</div>
+                    <div class="kpi-change negative">↓ 6% vs October</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Average Position</div>
+                    <div class="kpi-value">14</div>
+                    <div class="kpi-change positive">↑ From position 31 in august</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Unique Users</div>
+                    <div class="kpi-value">657</div>
+                    <div class="kpi-change negative">↓ 4% vs October</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">New Users</div>
+                    <div class="kpi-value">641</div>
+                    <div class="kpi-change positive">↑ 5% vs October</div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <strong>📌 KEY TAKEAWAY</strong>
+                <p>Traffic continues to rise driven by organic and direct channels. The email campaign sent on November 26 likely contributed to direct traffic surge. CTR optimization remains a priority for converting high visibility into clicks.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Traffic Sources -->
+    <section id="traffic">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Traffic Analysis</h2>
+                <p class="section-subtitle">Distribution and evolution of traffic sources</p>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>November 2025</th>
+                            <th>October 2025</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Organic Search</strong></td>
+                            <td class="metric-value">261</td>
+                            <td>223</td>
+                            <td style="color: var(--success); font-weight: 600;">+17%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Direct</strong></td>
+                            <td class="metric-value">484</td>
+                            <td>412</td>
+                            <td style="color: var(--success); font-weight: 600;">+17%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Referral</strong></td>
+                            <td class="metric-value">16</td>
+                            <td>5</td>
+                            <td style="color: var(--success); font-weight: 600;">+220%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Paid Search</strong></td>
+                            <td class="metric-value">10</td>
+                            <td>66</td>
+                            <td style="color: var(--danger); font-weight: 600;">-85%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Unassigned</strong></td>
+                            <td class="metric-value">5</td>
+                            <td>59</td>
+                            <td style="color: var(--danger); font-weight: 600;">-92%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Bounce Rate</div>
+                    <div class="kpi-value">75.93%</div>
+                    <div class="kpi-change negative">↑ 4.03pp vs October</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Engagement Rate</div>
+                    <div class="kpi-value">24.05%</div>
+                    <div class="kpi-change negative">↓ 4.05pp vs October</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Avg Session Duration</div>
+                    <div class="kpi-value">1:12</div>
+                    <div class="kpi-change positive">↑ 8 seconds</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>New Users Evolution (July - November 2025)</h4>
+                <div class="chart-wrapper">
+                    <canvas id="newUsersChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance -->
+    <section id="performance">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">SEO Performance</h2>
+                <p class="section-subtitle">Long-term trends and keyword analysis</p>
+            </div>
+
+            <div class="insight-box">
+                <strong>📌 LONG-TERM TRENDS</strong>
+                <p><strong>Impressions & Clicks:</strong> Stabilization • <strong>CTR:</strong> Gradual improvement despite monthly fluctuations • <strong>Position:</strong> Dramatic improvement from 31 to 14</p>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h4>Total Impressions Evolution</h4>
+                    <div class="chart-wrapper">
+                        <canvas id="impressionsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h4>Total Clicks Evolution</h4>
+                    <div class="chart-wrapper">
+                        <canvas id="clicksChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h4>Average CTR Evolution</h4>
+                    <div class="chart-wrapper">
+                        <canvas id="ctrChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h4>Average Position Evolution</h4>
+                    <div class="chart-wrapper">
+                        <canvas id="positionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 1.75rem; color: white; margin: 3rem 0 1.5rem; font-family: 'Playfair Display', serif;">Top Performing Keywords</h3>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Query</th>
+                            <th>Clicks</th>
+                            <th>Impressions</th>
+                            <th>CTR</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #FEF3C7;">
+                            <td><strong>relative humidity to ppm</strong></td>
+                            <td class="metric-value">2</td>
+                            <td>19</td>
+                            <td style="color: var(--success); font-weight: 600;">10.5%</td>
+                            <td>2.5</td>
+                        </tr>
+                        <tr>
+                            <td>oneida research services</td>
+                            <td class="metric-value">2</td>
+                            <td>247</td>
+                            <td>0.8%</td>
+                            <td>3.2</td>
+                        </tr>
+                        <tr>
+                            <td>ors calculator</td>
+                            <td class="metric-value">2</td>
+                            <td>93</td>
+                            <td>2.2%</td>
+                            <td>6.9</td>
+                        </tr>
+                        <tr>
+                            <td>gross leak test</td>
+                            <td class="metric-value">1</td>
+                            <td>246</td>
+                            <td>0.4%</td>
+                            <td>2.2</td>
+                        </tr>
+                        <tr>
+                            <td>gross leak bubble tester</td>
+                            <td class="metric-value">1</td>
+                            <td>231</td>
+                            <td>0.4%</td>
+                            <td>5.2</td>
+                        </tr>
+                        <tr>
+                            <td>ors labs</td>
+                            <td class="metric-value">1</td>
+                            <td>150</td>
+                            <td>0.7%</td>
+                            <td>3.6</td>
+                        </tr>
+                        <tr>
+                            <td>orslabs</td>
+                            <td class="metric-value">1</td>
+                            <td>103</td>
+                            <td>1.0%</td>
+                            <td>5.6</td>
+                        </tr>
+                        <tr>
+                            <td>relative humidity to ppm calculator</td>
+                            <td class="metric-value">1</td>
+                            <td>62</td>
+                            <td>1.6%</td>
+                            <td>3.0</td>
+                        </tr>
+                        <tr>
+                            <td>frost point calculator</td>
+                            <td class="metric-value">1</td>
+                            <td>46</td>
+                            <td>2.2%</td>
+                            <td>10.1</td>
+                        </tr>
+                        <tr>
+                            <td>gross leak test procedure</td>
+                            <td class="metric-value">1</td>
+                            <td>39</td>
+                            <td>2.6%</td>
+                            <td>1.7</td>
+                        </tr>
+                        <tr style="background: #FEE2E2;">
+                            <td><strong>hermeticity</strong></td>
+                            <td style="color: var(--danger); font-weight: 600;">0</td>
+                            <td>715</td>
+                            <td style="color: var(--danger); font-weight: 600;">0%</td>
+                            <td>6.3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insight-box">
+                <strong>📌 KEYWORD INSIGHTS</strong>
+                <p>"Relative humidity to ppm" shows excellent 10.5% CTR confirming strong user intent match.<br>
+                Branded traffic remains strong, but high-impression technical keywords still fail to convert.
+                Optimizing titles and meta descriptions could strongly improve CTR and capture more qualified traffic.<br>
+                Despite generating very high impressions, hermeticity keyword is broad (may be used in many different contexts).
+                It should be used to identify related, more precise search terms that match ORS Labs’ expertise.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Priorities -->
+    <section id="priorities">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Strategic Priorities</h2>
+                <p class="section-subtitle">Recommendations for Q1 2026</p>
+            </div>
+
+            <div class="priorities-grid">
+                <div class="priority-card">
+                    <div class="priority-number" style="background: var(--gradient-primary);">1</div>
+                    <div class="priority-content">
+                        <h3>Improve Engagement & UX</h3>
+                        <p>Enhance content pages with richer explanations, optimize landing page UX clarity, and reinforce internal linking structure on high-impression technical pages.</p>
+                        <div class="target">
+                            <strong>Target:</strong> Reduce bounce rate from 75.93% to below 70%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="priority-card">
+                    <div class="priority-number" style="background: var(--gradient-accent);">2</div>
+                    <div class="priority-content">
+                        <h3>CTR Optimization</h3>
+                        <p>Refine titles and meta descriptions on high-impression pages.</p>
+                        <div class="target">
+                            <strong>Target:</strong> Increase average CTR from 1.70% to 2.0%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="priority-card">
+                    <div class="priority-number" style="background: linear-gradient(135deg, #64748B 0%, #94A3B8 100%);">3</div>
+                    <div class="priority-content">
+                        <h3>Content Update</h3>
+                        <p>Update /outils/conversions-dhumidite/ page using the structure proposed in October report.</p>
+                        <div class="target">
+                            <strong>Status:</strong> Ready for implementation - content outline available
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-radius: 16px; padding: 2rem; margin-top: 3rem; text-align: center;">
+                <h3 style="color: #78350F; font-size: 1.5rem; margin-bottom: 1rem;">✅ Success Metrics for Q1 2026</h3>
+                <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; color: #92400E; font-weight: 600;">
+                    <span>Bounce rate &lt; 70%</span>
+                    <span>CTR &gt; 2.0%</span>
+                    <span>Engagement &gt; 30%</span>
+                    <span>Duration &gt; 1:30</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section id="conclusion">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Conclusion</h2>
+            </div>
+
+            <div class="conclusion">
+                <p>November 2025 shows a <strong>generally positive continuation of the SEO trends</strong> observed in recent months. Overall visibility improved, with a notable
+                    increase in impressions and organic sessions. Humidity conversions and moisture calculation tools remain the strongest organic entry points.<br><br>
+                    User acquisition is stable, but engagement remains fragile. This reinforces the need to improve landing-page relevance, UX clarity and internal linking,
+                    especially on high-impression technical pages.<br><br>
+                    Organic and direct channels continue to drive most of the traffic, and the email campaign likely contributed to higher direct activity.</p>
+
+                <h3>Looking Ahead</h3>
+
+                <p>Success in Q1 2026 depends on executing three interconnected priorities: <strong>engagement optimization</strong> through enhanced content depth, <strong>CTR improvement</strong> via strategic refinement of titles and meta descriptions, and <strong>content modernization</strong> starting with the humidity conversion page update.</p>
+                <p>These initiatives, combined with continued monitoring of algorithm changes and competitive landscape shifts, position orslabs.fr for sustained organic growth and improved user engagement throughout 2026.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><strong>By:</strong><a href="https://cdizign.com" target="_blank" rel="noopener noreferrer" style="color: white; font-style: italic; text-decoration: none" > cDizign.com - Stéphanie Allégret</a> </p>
+            <p><strong>Report Period:</strong> November 1-30, 2025 | <strong>Next Review:</strong> January - February 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll indicator
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollIndicator').style.width = scrolled + '%';
+
+            // Navbar shadow on scroll
+            const navbar = document.getElementById('navbar');
+            if (winScroll > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.kpi-card, .priority-card, .data-table').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Chart.js default configuration
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.font.size = 12;
+        Chart.defaults.color = '#64748B';
+
+        // New Users Chart
+        const newUsersCtx = document.getElementById('newUsersChart');
+        if (newUsersCtx) {
+            new Chart(newUsersCtx, {
+                type: 'line',
+                data: {
+                    labels: ['July 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25'],
+                    datasets: [{
+                        label: 'New Users',
+                        data: [372, 356, 341, 608, 641],
+                        borderColor: '#06B6D4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#06B6D4',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1E3A8A',
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: { size: 13, weight: 'bold' },
+                            bodyFont: { size: 12 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                color: '#F1F5F9'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Impressions Chart
+        const impressionsCtx = document.getElementById('impressionsChart');
+        if (impressionsCtx) {
+            new Chart(impressionsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25'],
+                    datasets: [{
+                        label: 'Total Impressions',
+                        data: [28000, 29500, 31000, 33500, 26803, 26000, 24500, 24000, 21000, 21500, 23500, 20500, 24519, 24888, 18135, 16692, 17910],
+                        borderColor: '#1E3A8A',
+                        backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#1E3A8A',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1E3A8A',
+                            padding: 12,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            },
+                            grid: { color: '#F1F5F9' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { maxRotation: 45, minRotation: 45 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Clicks Chart
+        const clicksCtx = document.getElementById('clicksChart');
+        if (clicksCtx) {
+            new Chart(clicksCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25'],
+                    datasets: [{
+                        label: 'Total Clicks',
+                        data: [580, 500, 570, 580, 458, 400, 300, 420, 450, 430, 400, 260, 280, 246, 246, 304, 305],
+                        borderColor: '#06B6D4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#06B6D4',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#06B6D4',
+                            padding: 12,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            },
+                            grid: { color: '#F1F5F9' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { maxRotation: 45, minRotation: 45 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // CTR Chart
+        const ctrCtx = document.getElementById('ctrChart');
+        if (ctrCtx) {
+            new Chart(ctrCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25'],
+                    datasets: [{
+                        label: 'Average CTR (%)',
+                        data: [2.1, 1.7, 1.84, 1.73, 1.71, 1.54, 1.22, 1.75, 2.14, 2.00, 1.70, 1.27, 1.14, 0.99, 1.36, 1.82, 1.70],
+                        borderColor: '#059669',
+                        backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#059669',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#059669',
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'CTR: ' + context.parsed.y.toFixed(2) + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(1) + '%';
+                                }
+                            },
+                            grid: { color: '#F1F5F9' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { maxRotation: 45, minRotation: 45 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Position Chart (inverted - lower is better)
+        const positionCtx = document.getElementById('positionChart');
+        if (positionCtx) {
+            new Chart(positionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25'],
+                    datasets: [{
+                        label: 'Average Position',
+                        data: [27, 28, 30, 31, 31, 30, 23, 21, 22, 29, 28, 29, 31, 31, 22, 12, 14],
+                        borderColor: '#F59E0B',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#F59E0B',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#F59E0B',
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Position: ' + context.parsed.y.toFixed(1);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            reverse: true,
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0);
+                                }
+                            },
+                            grid: { color: '#F1F5F9' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { maxRotation: 45, minRotation: 45 }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ report.title }} - ORS Labs{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .report-header {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .report-info h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .report-meta {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .report-viewer {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+            height: calc(100vh - 250px);
+            min-height: 600px;
+        }
+
+        .report-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .report-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: flex-start;
+            }
+
+            .report-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .report-viewer {
+                height: calc(100vh - 350px);
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="report-header">
+    <div class="report-info">
+        <h1>{{ report.monthName }}</h1>
+        <div class="report-meta">
+            {% if report.summary %}
+                {{ report.summary }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="report-actions">
+        <a href="{{ path('app_reports_list') }}" class="btn btn-secondary">
+            ← Retour aux rapports
+        </a>
+        <a href="{{ reportUrl }}" target="_blank" class="btn btn-primary">
+            Ouvrir dans un nouvel onglet ↗
+        </a>
+    </div>
+</div>
+
+<div class="report-viewer">
+    <iframe 
+        src="{{ reportUrl }}" 
+        class="report-iframe"
+        title="Rapport SEO {{ report.monthName }}"
+        loading="lazy"
+    ></iframe>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Optionnel : afficher un loader pendant le chargement
+        const iframe = document.querySelector('.report-iframe');
+        
+        iframe.addEventListener('load', function() {
+            console.log('Rapport chargé avec succès');
+        });
+    </script>
+{% endblock %}

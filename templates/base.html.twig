@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ORS Labs - SEO Reports{% endblock %}</title>
+
+    <link rel="icon" href="https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_192,h_192/https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png" sizes="192x192" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {% block stylesheets %}
+        <style>
+            :root {
+                --primary: #1E3A8A;
+                --primary-light: #3B82F6;
+                --accent: #06B6D4;
+                --accent-dark: #0891B2;
+                --surface: #FFFFFF;
+                --background: #F8FAFC;
+                --text-primary: #1E293B;
+                --theme: #062e57;
+                --theme-dark: #101b2c;
+                --text-secondary: #64748B;
+                --border: #E2E8F0;
+                --success: #059669;
+                --warning: #F59E0B;
+                --danger: #DC2626;
+                --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                line-height: 1.6;
+                color: var(--text-primary);
+                background: var(--background);
+                min-height: 100vh;
+            }
+
+            /* Navbar */
+            .navbar {
+                background: white;
+                border-bottom: 1px solid var(--border);
+                padding: 1rem 2rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            .navbar-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .navbar-brand {
+                font-family: 'Playfair Display', serif;
+                font-size: 1.5rem;
+                font-weight: 900;
+                background: var(--gradient-primary);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-decoration: none;
+            }
+
+            .navbar-menu {
+                display: flex;
+                gap: 2rem;
+                align-items: center;
+                list-style: none;
+            }
+
+            .navbar-link {
+                text-decoration: none;
+                color: var(--text-secondary);
+                font-weight: 500;
+                transition: color 0.3s ease;
+            }
+
+            .navbar-link:hover {
+                color: var(--primary);
+            }
+
+            .navbar-user {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: var(--gradient-primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: 600;
+            }
+
+            /* Main Content */
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+
+            /* Flash Messages */
+            .alert {
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                margin-bottom: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .alert-success {
+                background: #D1FAE5;
+                border-left: 4px solid var(--success);
+                color: #065F46;
+            }
+
+            .alert-error {
+                background: #FEE2E2;
+                border-left: 4px solid var(--danger);
+                color: #991B1B;
+            }
+
+            .alert-warning {
+                background: #FEF3C7;
+                border-left: 4px solid var(--warning);
+                color: #92400E;
+            }
+
+            .alert-info {
+                background: #DBEAFE;
+                border-left: 4px solid var(--primary);
+                color: #1E3A8A;
+            }
+
+            /* Buttons */
+            .btn {
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+                text-decoration: none;
+                display: inline-block;
+                transition: all 0.3s ease;
+                border: none;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+
+            .btn-primary {
+                background: var(--gradient-primary);
+                color: white;
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+            }
+
+            .btn-secondary {
+                background: var(--gradient-accent);
+                color: white;
+            }
+
+            .btn-secondary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+            }
+
+            .btn-danger {
+                background: var(--danger);
+                color: white;
+            }
+
+            .btn-danger:hover {
+                background: #B91C1C;
+            }
+
+            /* Footer */
+            footer {
+                background: var(--primary);
+                color: white;
+                padding: 2rem;
+                text-align: center;
+                margin-top: auto;
+            }
+
+            footer a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .navbar-menu {
+                    display: none;
+                }
+
+                .container {
+                    padding: 1rem;
+                }
+            }
+        </style>
+    {% endblock %}
+</head>
+<body>
+{% if app.user %}
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{{ path('app_dashboard') }}" class="navbar-brand">ORSLabs SEO</a>
+            <ul class="navbar-menu">
+                <li><a href="{{ path('app_dashboard') }}" class="navbar-link">Dashboard</a></li>
+                <li><a href="{{ path('app_reports_list') }}" class="navbar-link">Rapports</a></li>
+            </ul>
+            <div class="navbar-user">
+                <div class="user-avatar">
+                    {{ app.user.firstName|slice(0, 1)|upper }}{{ app.user.lastName|slice(0, 1)|upper }}
+                </div>
+                <span style="color: var(--text-secondary);">{{ app.user.fullName }}</span>
+                <a href="{{ path('app_logout') }}" class="btn btn-danger" style="padding: 0.5rem 1rem;">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+{% endif %}
+
+<main class="container">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            ✓ {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-error">
+            ✗ {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-warning">
+            ⚠ {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('info') %}
+        <div class="alert alert-info">
+            ℹ {{ message }}
+        </div>
+    {% endfor %}
+
+    {% block body %}{% endblock %}
+</main>
+
+<footer>
+    <p><strong>ORS Labs</strong> - SEO Monitoring Dashboard</p>
+    <p>Développé par <a href="https://cdizign.com" target="_blank">cDizign.com</a></p>
+</footer>
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>
