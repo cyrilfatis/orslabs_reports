@@ -396,7 +396,7 @@
 
 {% block body %}
 <div class="dashboard-header">
-    <h1 class="dashboard-title">Tableau de bord SEO</h1>
+    <h1 class="dashboard-title">Tableau de bord</h1>
     <p class="dashboard-subtitle">Performances digitales — {{ user.firstName }}, bienvenue !</p>
     {% if latestSeo %}
         <div class="dashboard-period">
@@ -486,15 +486,15 @@
     </div>
 
     {# Taux de rebond #}
-    <div class="kpi-card warning">
-        <div class="kpi-label">Taux de rebond</div>
-        <div class="kpi-value">{{ latestSeo.bounceRate is not null ? latestSeo.bounceRate|number_format(1) ~ '%' : 'N/A' }}</div>
-        {% if seoTrends.bounceRate.value is defined and seoTrends.bounceRate.value %}
-            <div class="kpi-trend {{ seoTrends.bounceRate.direction }}">
-                {{ seoTrends.bounceRate.value }}
-            </div>
-        {% endif %}
-    </div>
+{#    <div class="kpi-card warning">#}
+{#        <div class="kpi-label">Taux de rebond</div>#}
+{#        <div class="kpi-value">{{ latestSeo.bounceRate is not null ? latestSeo.bounceRate|number_format(1) ~ '%' : 'N/A' }}</div>#}
+{#        {% if seoTrends.bounceRate.value is defined and seoTrends.bounceRate.value %}#}
+{#            <div class="kpi-trend {{ seoTrends.bounceRate.direction }}">#}
+{#                {{ seoTrends.bounceRate.value }}#}
+{#            </div>#}
+{#        {% endif %}#}
+{#    </div>#}
 
     {# Engagement #}
     <div class="kpi-card warning">
