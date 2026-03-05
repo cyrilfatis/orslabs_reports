@@ -1,0 +1,665 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Médiathèque – ORS Labs{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+/* ── PAGE HEADER ─────────────────────────────── */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+
+/* ── CATEGORIES TABS ─────────────────────────── */
+.cat-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0;
+}
+.cat-tab {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid transparent;
+    border-bottom: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    background: transparent;
+    transition: all 0.2s;
+    position: relative;
+    bottom: -2px;
+}
+.cat-tab:hover { color: var(--primary); background: var(--background); }
+.cat-tab.active {
+    background: white;
+    color: var(--primary);
+    border-color: var(--border);
+    border-bottom-color: white;
+}
+.cat-tab .badge {
+    background: var(--border);
+    color: var(--text-secondary);
+    border-radius: 20px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.75rem;
+}
+.cat-tab.active .badge {
+    background: var(--primary);
+    color: white;
+}
+
+/* ── CATEGORY PANEL ──────────────────────────── */
+.cat-panel { display: none; }
+.cat-panel.active { display: block; }
+
+/* ── DROP ZONE ───────────────────────────────── */
+.drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 1.5rem;
+    background: var(--background);
+    position: relative;
+}
+.drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--primary-light);
+    background: #EFF6FF;
+}
+.drop-zone i { font-size: 2.5rem; color: var(--primary-light); margin-bottom: 0.75rem; display: block; }
+.drop-zone p { color: var(--text-secondary); margin-bottom: 0.5rem; }
+.drop-zone small { color: var(--text-secondary); font-size: 0.8rem; }
+.drop-zone input[type="file"] { display: none; }
+.drop-zone label {
+    display: inline-block;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1.2rem;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ── UPLOAD PROGRESS ─────────────────────────── */
+.upload-progress {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: #EFF6FF;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+.upload-progress.visible { display: flex; }
+.progress-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.progress-bar { height: 100%; background: var(--gradient-primary); border-radius: 3px; transition: width 0.3s; }
+
+/* ── FILE LIST ───────────────────────────────── */
+.file-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: box-shadow 0.2s;
+}
+.file-item:hover { box-shadow: 0 2px 12px rgba(30,58,138,0.08); }
+.file-icon {
+    width: 42px; height: 42px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.file-info { flex: 1; min-width: 0; }
+.file-name { font-weight: 600; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-meta { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.1rem; }
+.file-desc { font-size: 0.82rem; color: var(--text-secondary); font-style: italic; margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+.btn-icon {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.btn-icon:hover { background: var(--primary); color: white; border-color: var(--primary); }
+.btn-icon.danger:hover { background: var(--danger); border-color: var(--danger); }
+
+/* ── EMPTY STATE ─────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+}
+.empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.4; }
+
+/* ── DESCRIPTION MODAL (inline form) ─────────── */
+.desc-modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+}
+.desc-modal-backdrop.open { display: flex; }
+.desc-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.desc-modal h3 { margin-bottom: 1rem; font-size: 1.1rem; }
+.desc-modal textarea {
+    width: 100%; min-height: 80px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    margin-bottom: 1rem;
+}
+.desc-modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+/* ── NEW CATEGORY MODAL ──────────────────────── */
+.modal-label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--text-primary); }
+.modal-input {
+    width: 100%; padding: 0.6rem 0.85rem;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-family: inherit; font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+.modal-input:focus { outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+.icon-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem; margin-bottom: 1rem;
+}
+.icon-opt {
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+.icon-opt:hover, .icon-opt.selected { border-color: var(--primary); background: #EFF6FF; color: var(--primary); }
+.color-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.color-opt {
+    width: 28px; height: 28px;
+    border-radius: 50%; cursor: pointer;
+    border: 3px solid transparent;
+    transition: transform 0.15s;
+}
+.color-opt:hover, .color-opt.selected { border-color: #1E293B; transform: scale(1.15); }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">📁 Médiathèque</h1>
+        <p class="page-subtitle">Stockage et partage de documents — accès administrateur uniquement</p>
+    </div>
+    <button class="btn btn-secondary" onclick="openNewCategoryModal()">
+        <i class="fas fa-plus"></i> Nouvelle catégorie
+    </button>
+</div>
+
+{# ── ONGLETS CATÉGORIES ─────────────────────────────────────────── #}
+<div class="cat-tabs" id="catTabs">
+    {% for cat in categories %}
+    <button class="cat-tab {% if loop.first %}active{% endif %}"
+            data-target="panel-{{ cat.id }}"
+            onclick="switchTab(this, 'panel-{{ cat.id }}')"
+            style="--cat-color: {{ cat.color ?? '#1E3A8A' }}">
+        <i class="fas {{ cat.icon ?? 'fa-folder' }}" style="color: {{ cat.color ?? '#1E3A8A' }}"></i>
+        {{ cat.name }}
+        <span class="badge">{{ documentsByCategory[cat.id]|length }}</span>
+    </button>
+    {% endfor %}
+</div>
+
+{# ── PANNEAUX CATÉGORIES ────────────────────────────────────────── #}
+{% for cat in categories %}
+<div class="cat-panel {% if loop.first %}active{% endif %}" id="panel-{{ cat.id }}">
+
+    {# Zone de dépôt #}
+    <div class="drop-zone" id="dropzone-{{ cat.id }}"
+         ondragover="onDragOver(event)"
+         ondragleave="onDragLeave(event)"
+         ondrop="onDrop(event, {{ cat.id }})">
+        <input type="file" id="fileInput-{{ cat.id }}" multiple
+               onchange="uploadFiles(this.files, {{ cat.id }})">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p><strong>Glissez vos fichiers ici</strong></p>
+        <p>ou</p>
+        <label for="fileInput-{{ cat.id }}">Parcourir les fichiers</label>
+        <small>PDF, Word, Excel, images… — max 20 Mo par fichier</small>
+    </div>
+
+    {# Barre de progression #}
+    <div class="upload-progress" id="progress-{{ cat.id }}">
+        <i class="fas fa-spinner fa-spin" style="color:var(--primary)"></i>
+        <span id="progress-label-{{ cat.id }}" style="font-size:0.85rem;color:var(--text-secondary)">Téléversement…</span>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar" id="progress-bar-{{ cat.id }}" style="width:0%"></div>
+        </div>
+    </div>
+
+    {# Liste des fichiers #}
+    <div class="file-list" id="fileList-{{ cat.id }}">
+        {% set docs = documentsByCategory[cat.id] %}
+        {% if docs is empty %}
+        <div class="empty-state" id="emptyState-{{ cat.id }}">
+            <i class="fas fa-inbox"></i>
+            <p>Aucun document dans cette catégorie.</p>
+        </div>
+        {% else %}
+        {% for doc in docs %}
+        {{ _self.renderFileItem(doc) }}
+        {% endfor %}
+        {% endif %}
+    </div>
+
+</div>
+{% endfor %}
+
+{# ── MODAL DESCRIPTION (upload) ─────────────────────────────────── #}
+<div class="desc-modal-backdrop" id="descModal">
+    <div class="desc-modal">
+        <h3>📝 Description du fichier (optionnel)</h3>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.75rem">
+            Fichier : <strong id="descFileName"></strong>
+        </p>
+        <textarea id="descTextarea" placeholder="Ajouter une description…"></textarea>
+        <div class="desc-modal-actions">
+            <button class="btn btn-secondary" style="padding:0.5rem 1rem;font-size:0.9rem" onclick="confirmUpload()">
+                Téléverser
+            </button>
+            <button class="btn" style="padding:0.5rem 1rem;background:var(--border);color:var(--text-primary);font-size:0.9rem" onclick="closeDescModal()">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
+{# ── MODAL NOUVELLE CATÉGORIE ───────────────────────────────────── #}
+<div class="desc-modal-backdrop" id="newCatModal">
+    <div class="desc-modal">
+        <h3>✨ Nouvelle catégorie</h3>
+        <label class="modal-label">Nom *</label>
+        <input class="modal-input" type="text" id="newCatName" placeholder="ex: Contrats">
+        <label class="modal-label">Description</label>
+        <input class="modal-input" type="text" id="newCatDesc" placeholder="Description courte…">
+        <label class="modal-label">Icône</label>
+        <div class="icon-grid" id="iconGrid">
+            {% set icons = ['fa-folder','fa-file-invoice','fa-receipt','fa-chart-line','fa-rocket','fa-file-contract','fa-file-alt','fa-images','fa-cog','fa-star','fa-briefcase','fa-shield-alt'] %}
+            {% for icon in icons %}
+            <div class="icon-opt" data-icon="{{ icon }}" onclick="selectIcon(this)">
+                <i class="fas {{ icon }}"></i>
+            </div>
+            {% endfor %}
+        </div>
+        <label class="modal-label">Couleur</label>
+        <div class="color-grid" id="colorGrid">
+            {% set colors = ['#1E3A8A','#059669','#DC2626','#7C3AED','#F59E0B','#0891B2','#DB2777','#64748B','#EA580C','#16A34A'] %}
+            {% for color in colors %}
+            <div class="color-opt" data-color="{{ color }}" style="background:{{ color }}" onclick="selectColor(this)"></div>
+            {% endfor %}
+        </div>
+        <div class="desc-modal-actions">
+            <button class="btn btn-primary" style="padding:0.5rem 1.2rem;font-size:0.9rem" onclick="submitNewCategory()">
+                Créer
+            </button>
+            <button class="btn" style="padding:0.5rem 1rem;background:var(--border);color:var(--text-primary);font-size:0.9rem"
+                    onclick="document.getElementById('newCatModal').classList.remove('open')">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
+{# ── MACRO ITEM FICHIER ─────────────────────────────────────────── #}
+{% macro renderFileItem(doc) %}
+<div class="file-item" id="fileItem-{{ doc.id }}">
+    <div class="file-icon" style="background:{{ doc.category.color ?? '#1E3A8A' }}22; color:{{ doc.category.color ?? '#1E3A8A' }}">
+        <i class="fas {{ doc.fileIcon }}"></i>
+    </div>
+    <div class="file-info">
+        <div class="file-name" title="{{ doc.originalName }}">{{ doc.originalName }}</div>
+        <div class="file-meta">
+            {{ doc.fileSizeFormatted }} · Ajouté le {{ doc.uploadedAt|date('d/m/Y à H:i') }} par {{ doc.uploadedBy.fullName }}
+        </div>
+        {% if doc.description %}
+        <div class="file-desc" title="{{ doc.description }}">{{ doc.description }}</div>
+        {% endif %}
+    </div>
+    <div class="file-actions">
+        <a href="{{ path('app_documents_download', {id: doc.id}) }}"
+           class="btn-icon" title="Télécharger">
+            <i class="fas fa-download"></i>
+        </a>
+        <button class="btn-icon danger"
+                title="Supprimer"
+                onclick="deleteDocument({{ doc.id }}, '{{ doc.originalName|e('js') }}', this)">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</div>
+{% endmacro %}
+
+{% endblock %}
+
+{% block javascripts %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+// ── ÉTAT GLOBAL ────────────────────────────────────────────────────────────
+let pendingFiles = [];
+let pendingCategoryId = null;
+let currentFileIndex = 0;
+
+// ── ONGLETS ────────────────────────────────────────────────────────────────
+function switchTab(btn, panelId) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.cat-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+}
+
+// ── DRAG & DROP ────────────────────────────────────────────────────────────
+function onDragOver(e) {
+    e.preventDefault();
+    e.currentTarget.classList.add('dragover');
+}
+function onDragLeave(e) {
+    e.currentTarget.classList.remove('dragover');
+}
+function onDrop(e, catId) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dragover');
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length) startUploadFlow(files, catId);
+}
+function uploadFiles(fileList, catId) {
+    const files = Array.from(fileList);
+    if (files.length) startUploadFlow(files, catId);
+}
+
+// ── FLOW UPLOAD (description par fichier) ─────────────────────────────────
+function startUploadFlow(files, catId) {
+    pendingFiles = files;
+    pendingCategoryId = catId;
+    currentFileIndex = 0;
+    askDescription();
+}
+
+function askDescription() {
+    if (currentFileIndex >= pendingFiles.length) return;
+    const file = pendingFiles[currentFileIndex];
+    document.getElementById('descFileName').textContent = file.name;
+    document.getElementById('descTextarea').value = '';
+    document.getElementById('descModal').classList.add('open');
+}
+
+function confirmUpload() {
+    const desc = document.getElementById('descTextarea').value;
+    document.getElementById('descModal').classList.remove('open');
+    uploadSingleFile(pendingFiles[currentFileIndex], pendingCategoryId, desc);
+}
+
+function closeDescModal() {
+    document.getElementById('descModal').classList.remove('open');
+    currentFileIndex++;
+    if (currentFileIndex < pendingFiles.length) {
+        setTimeout(askDescription, 200);
+    }
+}
+
+// ── UPLOAD XHR (avec barre de progression) ────────────────────────────────
+function uploadSingleFile(file, catId, description) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('category_id', catId);
+    formData.append('description', description);
+
+    const progressEl = document.getElementById('progress-' + catId);
+    const progressBar = document.getElementById('progress-bar-' + catId);
+    const progressLabel = document.getElementById('progress-label-' + catId);
+    progressEl.classList.add('visible');
+    progressBar.style.width = '0%';
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '{{ path('app_documents_upload') }}');
+
+    xhr.upload.onprogress = e => {
+        if (e.lengthComputable) {
+            const pct = Math.round(e.loaded / e.total * 100);
+            progressBar.style.width = pct + '%';
+            progressLabel.textContent = `${file.name} — ${pct}%`;
+        }
+    };
+
+    xhr.onload = () => {
+        progressEl.classList.remove('visible');
+        try {
+            const data = JSON.parse(xhr.responseText);
+            if (data.success) {
+                appendFileItem(data.document, catId);
+                showFlash('success', `✔ "${data.document.name}" ajouté avec succès.`);
+            } else {
+                showFlash('error', data.error ?? 'Erreur lors du téléversement.');
+            }
+        } catch {
+            showFlash('error', 'Réponse invalide du serveur.');
+        }
+        currentFileIndex++;
+        if (currentFileIndex < pendingFiles.length) setTimeout(askDescription, 200);
+    };
+
+    xhr.onerror = () => {
+        progressEl.classList.remove('visible');
+        showFlash('error', 'Erreur réseau lors du téléversement.');
+        currentFileIndex++;
+        if (currentFileIndex < pendingFiles.length) setTimeout(askDescription, 200);
+    };
+
+    xhr.send(formData);
+}
+
+// ── AJOUT DYNAMIQUE D'UN ITEM ─────────────────────────────────────────────
+function appendFileItem(doc, catId) {
+    const list = document.getElementById('fileList-' + catId);
+
+    // Supprimer l'empty state si présent
+    const empty = document.getElementById('emptyState-' + catId);
+    if (empty) empty.remove();
+
+    const div = document.createElement('div');
+    div.className = 'file-item';
+    div.id = 'fileItem-' + doc.id;
+    div.innerHTML = `
+        <div class="file-icon" style="background:#EFF6FF;color:var(--primary)">
+            <i class="fas ${doc.icon}"></i>
+        </div>
+        <div class="file-info">
+            <div class="file-name" title="${escHtml(doc.name)}">${escHtml(doc.name)}</div>
+            <div class="file-meta">${doc.size} · Ajouté le ${doc.uploadedAt} par ${escHtml(doc.uploadedBy)}</div>
+            ${doc.description ? `<div class="file-desc" title="${escHtml(doc.description)}">${escHtml(doc.description)}</div>` : ''}
+        </div>
+        <div class="file-actions">
+            <a href="${doc.downloadUrl}" class="btn-icon" title="Télécharger">
+                <i class="fas fa-download"></i>
+            </a>
+            <button class="btn-icon danger" title="Supprimer"
+                    onclick="deleteDocument(${doc.id}, '${escJs(doc.name)}', this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+    list.prepend(div);
+
+    // Mettre à jour le badge de l'onglet
+    updateBadge(catId, +1);
+}
+
+// ── SUPPRESSION ───────────────────────────────────────────────────────────
+function deleteDocument(id, name, btn) {
+    if (!confirm(`Supprimer "${name}" ?\n\nCette action est définitive.`)) return;
+
+    btn.disabled = true;
+
+    fetch('{{ path('app_documents_delete', {id: '__ID__'}) }}'.replace('__ID__', id), {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            const item = document.getElementById('fileItem-' + id);
+            const list = item.parentElement;
+            const catPanelId = list.id.replace('fileList-', '');
+            item.style.transition = 'opacity 0.3s, transform 0.3s';
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+                item.remove();
+                updateBadge(catPanelId, -1);
+                if (list.children.length === 0) {
+                    list.innerHTML = `<div class="empty-state" id="emptyState-${catPanelId}">
+                        <i class="fas fa-inbox"></i><p>Aucun document dans cette catégorie.</p>
+                    </div>`;
+                }
+            }, 300);
+            showFlash('success', `"${name}" supprimé.`);
+        } else {
+            showFlash('error', data.error ?? 'Erreur lors de la suppression.');
+            btn.disabled = false;
+        }
+    });
+}
+
+// ── BADGE ─────────────────────────────────────────────────────────────────
+function updateBadge(catId, delta) {
+    const tab = document.querySelector(`[data-target="panel-${catId}"] .badge`);
+    if (tab) tab.textContent = Math.max(0, (parseInt(tab.textContent) || 0) + delta);
+}
+
+// ── NOUVELLE CATÉGORIE ────────────────────────────────────────────────────
+let selectedIcon = 'fa-folder';
+let selectedColor = '#1E3A8A';
+
+function openNewCategoryModal() {
+    selectedIcon = 'fa-folder';
+    selectedColor = '#1E3A8A';
+    document.getElementById('newCatName').value = '';
+    document.getElementById('newCatDesc').value = '';
+    // Reset selections
+    document.querySelectorAll('.icon-opt').forEach(el => el.classList.remove('selected'));
+    document.querySelector('[data-icon="fa-folder"]')?.classList.add('selected');
+    document.querySelectorAll('.color-opt').forEach(el => el.classList.remove('selected'));
+    document.querySelector('[data-color="#1E3A8A"]')?.classList.add('selected');
+    document.getElementById('newCatModal').classList.add('open');
+}
+
+function selectIcon(el) {
+    document.querySelectorAll('.icon-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedIcon = el.dataset.icon;
+}
+function selectColor(el) {
+    document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedColor = el.dataset.color;
+}
+
+function submitNewCategory() {
+    const name = document.getElementById('newCatName').value.trim();
+    if (!name) { alert('Le nom est obligatoire.'); return; }
+
+    const fd = new FormData();
+    fd.append('name', name);
+    fd.append('description', document.getElementById('newCatDesc').value);
+    fd.append('icon', selectedIcon);
+    fd.append('color', selectedColor);
+
+    fetch('{{ path('app_documents_category_create') }}', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('newCatModal').classList.remove('open');
+            showFlash('success', `Catégorie "${data.category.name}" créée. Rechargement…`);
+            setTimeout(() => location.reload(), 1200);
+        } else {
+            showFlash('error', data.error ?? 'Erreur lors de la création.');
+        }
+    });
+}
+
+// ── FLASH MESSAGES DYNAMIQUES ─────────────────────────────────────────────
+function showFlash(type, msg) {
+    const container = document.querySelector('main.container') || document.body;
+    const div = document.createElement('div');
+    div.className = `alert alert-${type}`;
+    div.textContent = msg;
+    div.style.cssText = 'animation: fadeIn 0.3s ease;';
+    container.insertBefore(div, container.firstChild);
+    setTimeout(() => { div.style.opacity = '0'; div.style.transition = 'opacity 0.5s'; setTimeout(() => div.remove(), 500); }, 4000);
+}
+
+// ── UTILITAIRES ───────────────────────────────────────────────────────────
+function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escJs(str) {
+    return String(str).replace(/'/g,"\\'").replace(/\n/g,' ');
+}
+</script>
+{% endblock %}

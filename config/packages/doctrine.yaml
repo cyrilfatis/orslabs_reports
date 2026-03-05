@@ -8,6 +8,8 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        options:
+            1002: "SET SESSION default_storage_engine=InnoDB"
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

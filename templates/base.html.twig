@@ -235,6 +235,11 @@
                 {% if is_granted('ROLE_ADMIN') %}
                 <li><a href="https://test.orslabs.cdizign.com/" class="navbar-link" target="_blank">Site de test</a></li>
                 {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('app_documents_index') }}" class="navbar-link">
+                            <i class="fas fa-folder-open" style="margin-right:0.3rem;font-size:0.85em"></i>Médiathèque
+                        </a></li>
+                {% endif %}
             </ul>
             <div class="navbar-user">
                 <div class="user-avatar">
