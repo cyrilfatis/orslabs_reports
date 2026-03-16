@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Monitoring - February 2026 | ORS Labs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #1E3A8A;
+            --primary-light: #3B82F6;
+            --accent: #06B6D4;
+            --accent-dark: #0891B2;
+            --surface: #FFFFFF;
+            --background: #F8FAFC;
+            --text-primary: #1E293B;
+            --theme: #062e57;
+            --theme-dark: #101b2c;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+            --success: #059669;
+            --warning: #F59E0B;
+            --danger: #DC2626;
+            --linkedin: #0A66C2;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            --gradient-vertical: linear-gradient(180deg, var(--theme) 0%, var(--primary-light) 100%);
+            --gradient-linkedin: linear-gradient(135deg, #0A66C2 0%, #0077B5 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 2rem 4rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            animation: fadeInUp 0.8s ease 0.6s backwards;
+        }
+
+        .hero-meta-item {
+            text-align: center;
+        }
+
+        .hero-meta-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .hero-meta-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Section */
+        section {
+            padding: 2rem 0;
+            animation: fadeIn 1s ease;
+            background: #062e57;
+        }
+
+        section:nth-child(even) {
+            background: #062e57;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-card.primary::before {
+            background: var(--gradient-primary);
+        }
+
+        .kpi-card.linkedin::before {
+            background: var(--gradient-linkedin);
+        }
+
+        .kpi-card.linkedin {
+            border: 2px solid var(--linkedin);
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .kpi-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-card.linkedin .kpi-value {
+            color: var(--linkedin);
+        }
+
+        .kpi-change {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .kpi-change.positive {
+            color: var(--success);
+        }
+
+        .kpi-change.negative {
+            color: var(--danger);
+        }
+
+        .kpi-change.neutral {
+            color: var(--text-secondary);
+        }
+
+        .kpi-change.linkedin-highlight {
+            color: var(--linkedin);
+            font-weight: 700;
+        }
+
+        /* LinkedIn Badge */
+        .linkedin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient-linkedin);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .linkedin-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Insight Box */
+        .insight-box {
+            background: #FEF3C7;
+            border-left: 4px solid var(--warning);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            animation: slideInLeft 0.6s ease;
+        }
+
+        .insight-box strong {
+            color: #92400E;
+            font-weight: 600;
+        }
+
+        .insight-box p {
+            color: #78350F;
+            margin: 0.5rem 0 0;
+        }
+
+        .insight-box.linkedin {
+            background: linear-gradient(135deg, #E7F3FF 0%, #D4ECFF 100%);
+            border-left-color: var(--linkedin);
+        }
+
+        .insight-box.linkedin strong {
+            color: #0A66C2;
+        }
+
+        .insight-box.linkedin p {
+            color: #1A4971;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            overflow-y: visible;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin: 2rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .data-table table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--gradient-vertical);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-top-color: #06aecd !important;
+            border-top-style: solid;
+            border-top-width: 3px;
+        }
+
+        .data-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--background);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table .metric-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Expandable Table */
+        .expandable-table {
+            position: relative;
+        }
+
+        .expandable-table .hidden-rows {
+            display: none;
+        }
+
+        .expandable-table.expanded .hidden-rows {
+            display: table-row-group;
+        }
+
+        .expand-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(180deg, transparent 0%, white 20%);
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .expand-button:hover {
+            color: var(--accent);
+        }
+
+        .expand-button svg {
+            transition: transform 0.3s ease;
+        }
+
+        .expandable-table.expanded .expand-button svg {
+            transform: rotate(180deg);
+        }
+
+        .expandable-table.expanded .expand-button {
+            margin-top: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Priorities */
+        .priorities-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .priority-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            display: flex;
+            gap: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .priority-card:hover {
+            transform: translateX(8px);
+        }
+
+        .priority-number {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .priority-content h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .priority-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .priority-content .target {
+            background: var(--background);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        .priority-content .target strong {
+            color: var(--primary);
+        }
+
+        /* Conclusion */
+        .conclusion {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .conclusion p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .conclusion h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 2rem 0 1rem;
+        }
+
+        /* LinkedIn Highlight Box */
+        .linkedin-highlight-box {
+            background: linear-gradient(135deg, #E7F3FF 0%, #D4ECFF 100%);
+            border: 2px solid var(--linkedin);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .linkedin-highlight-box .icon {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-linkedin);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .linkedin-highlight-box .icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .linkedin-highlight-box .content h4 {
+            color: var(--linkedin);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .linkedin-highlight-box .content p {
+            color: #1A4971;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .linkedin-highlight-box .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .linkedin-highlight-box .stat {
+            text-align: center;
+        }
+
+        .linkedin-highlight-box .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--linkedin);
+        }
+
+        .linkedin-highlight-box .stat-label {
+            font-size: 0.85rem;
+            color: #1A4971;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.9;
+            margin: 0.5rem 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .charts-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .linkedin-highlight-box {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .linkedin-highlight-box .stats {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-meta {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .priority-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .conclusion {
+                padding: 2rem;
+            }
+
+            .data-table {
+                border-radius: 8px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .chart-container {
+                padding: 1.5rem;
+            }
+
+            .chart-wrapper {
+                height: 250px;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .hero {
+                padding: 4rem 1rem 3rem;
+            }
+
+            .insight-box {
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero .description {
+                font-size: 1rem;
+            }
+
+            .hero-meta-value {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .kpi-value {
+                font-size: 2.5rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.75rem;
+            }
+
+            .chart-container {
+                padding: 1rem;
+            }
+
+            .chart-container h4 {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .chart-wrapper {
+                height: 220px;
+            }
+
+            .priority-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .priority-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin: 2rem 0;
+        }
+
+        .chart-container h4 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+    </style>
+    <link rel="icon" href="https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_192,h_192/https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png" sizes="192x192"/>
+    <link rel="apple-touch-icon" href="https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_180,h_180/https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png"/>
+    <meta name="msapplication-TileImage" content="https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png"/>
+</head>
+<body>
+<div class="scroll-indicator" id="scrollIndicator"></div>
+
+<!-- Navigation -->
+<nav id="navbar">
+    <div class="nav-container">
+        <div class="nav-brand">Oneida Research Services - SEO</div>
+        <ul class="nav-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#traffic">Traffic</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#priorities">Priorities</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>SEO Monitoring</h1>
+        <p class="subtitle">February 2026</p>
+        <p class="description">Comprehensive analysis of orslabs.fr organic search performance, traffic patterns, and strategic recommendations for the coming months</p>
+
+        <div class="hero-meta">
+            <div class="hero-meta-item">
+                <span class="hero-meta-value">21,779</span>
+                <span class="hero-meta-label">Total Impressions</span>
+            </div>
+            <div class="hero-meta-item">
+                <span class="hero-meta-value">227</span>
+                <span class="hero-meta-label">Total Clicks</span>
+            </div>
+            <div class="hero-meta-item">
+                <span class="hero-meta-value">Position 13</span>
+                <span class="hero-meta-label">Avg Ranking</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Overview -->
+<section id="overview">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Executive Summary</h2>
+            <p class="section-subtitle">February shows a significant traffic decline but continued SEO visibility growth with improved rankings</p>
+        </div>
+
+        <!-- LinkedIn Highlight -->
+        <div class="linkedin-highlight-box">
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+            </div>
+            <div class="content">
+                <h4>LinkedIn &amp; Newsletter Activity</h4>
+                <p>LinkedIn posts were published and <strong>one newsletter was sent</strong> in February. Organic social traffic increased slightly to <strong>10 sessions</strong> (vs 8 in January), confirming the positive impact of regular content activity.</p>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">10</div>
+                        <div class="stat-label">Organic Social Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">+25%</div>
+                        <div class="stat-label">vs January</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card primary">
+                <div class="kpi-label">Organic Traffic</div>
+                <div class="kpi-value">147</div>
+                <div class="kpi-change negative">↓ 32% vs January</div>
+            </div>
+
+            <div class="kpi-card primary">
+                <div class="kpi-label">Direct Traffic</div>
+                <div class="kpi-value">276</div>
+                <div class="kpi-change negative">↓ 43% vs January</div>
+            </div>
+
+            <div class="kpi-card linkedin">
+                <div class="kpi-label">Organic Social</div>
+                <div class="kpi-value">10</div>
+                <div class="kpi-change linkedin-highlight">↑ vs 8 in January</div>
+                <span class="linkedin-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    LinkedIn
+                </span>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Total Impressions</div>
+                <div class="kpi-value">21,779</div>
+                <div class="kpi-change positive">↑ 7% vs January</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Total Clicks</div>
+                <div class="kpi-value">227</div>
+                <div class="kpi-change negative">↓ 9% vs January</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Average CTR</div>
+                <div class="kpi-value">1.00%</div>
+                <div class="kpi-change negative">↓ 17% vs January</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Average Position</div>
+                <div class="kpi-value">13</div>
+                <div class="kpi-change positive">↑ 2 positions vs January</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Total Unique Users</div>
+                <div class="kpi-value">329</div>
+                <div class="kpi-change negative">↓ 42% vs January</div>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 KEY TAKEAWAY</strong>
+            <p>February recorded a <strong>significant drop in overall traffic</strong> across all main acquisition channels. Organic and direct traffic remain dominant, but both declined substantially. However, SEO visibility continues to strengthen with <strong>higher impressions (+7%) and improved ranking (position 13)</strong>. This divergence between visibility and sessions suggests that CTR optimization remains the key lever to convert existing exposure into qualified visits. This decrease should be monitored over the coming months to determine whether it reflects a temporary fluctuation or a longer-term trend.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Traffic Sources -->
+<section id="traffic">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Traffic Analysis</h2>
+            <p class="section-subtitle">Distribution and evolution of traffic sources</p>
+        </div>
+
+        <div class="data-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Feb 2026</th>
+                    <th>Jan 2026</th>
+                    <th>Dec 2025</th>
+                    <th>Nov 2025</th>
+                    <th>Change vs Jan</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>Organic Search</strong></td>
+                    <td class="metric-value">147</td>
+                    <td>215</td>
+                    <td>208</td>
+                    <td>261</td>
+                    <td style="color: var(--danger); font-weight: 600;">-32%</td>
+                </tr>
+                <tr>
+                    <td><strong>Direct</strong></td>
+                    <td class="metric-value">276</td>
+                    <td>484</td>
+                    <td>380</td>
+                    <td>484</td>
+                    <td style="color: var(--danger); font-weight: 600;">-43%</td>
+                </tr>
+                <tr style="background: linear-gradient(90deg, #E7F3FF 0%, white 100%);">
+                    <td><strong style="color: var(--linkedin);">🔗 Organic Social</strong></td>
+                    <td class="metric-value" style="color: var(--linkedin);">10</td>
+                    <td>8</td>
+                    <td>18</td>
+                    <td>0</td>
+                    <td style="color: var(--success); font-weight: 600;">+25%</td>
+                </tr>
+                <tr>
+                    <td><strong>Referral</strong></td>
+                    <td class="metric-value">3</td>
+                    <td>5</td>
+                    <td>8</td>
+                    <td>16</td>
+                    <td style="color: var(--danger); font-weight: 600;">-40%</td>
+                </tr>
+                <tr>
+                    <td><strong>Paid Search</strong></td>
+                    <td class="metric-value">3</td>
+                    <td>8</td>
+                    <td>1</td>
+                    <td>10</td>
+                    <td style="color: var(--danger); font-weight: 600;">-63%</td>
+                </tr>
+                <tr>
+                    <td><strong>Unassigned</strong></td>
+                    <td class="metric-value">0</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>5</td>
+                    <td style="color: var(--text-secondary); font-weight: 600;">—</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight-box linkedin">
+            <strong>🔗 LINKEDIN &amp; NEWSLETTER UPDATE</strong>
+            <p>LinkedIn posts were published and a newsletter was sent in February. Organic social traffic increased slightly to <strong>10 sessions</strong> from 8 in January. This is a positive signal confirming that consistent content activity generates measurable traffic returns, even when overall site traffic declines.</p>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Sessions</div>
+                <div class="kpi-value">439</div>
+                <div class="kpi-change negative">↓ 39% vs January</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Bounce Rate</div>
+                <div class="kpi-value">71.07%</div>
+                <div class="kpi-change positive">↓ 4.10pp vs January</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Engagement Rate</div>
+                <div class="kpi-value">28.93%</div>
+                <div class="kpi-change positive">↑ 4.10pp vs January</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Pages per Session</div>
+                <div class="kpi-value">1.21</div>
+                <div class="kpi-change neutral">≈ Stable vs January (1.22)</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Avg Session Duration</div>
+                <div class="kpi-value">1:44</div>
+                <div class="kpi-change positive">↑ 10 seconds vs January</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">New Users</div>
+                <div class="kpi-value">300</div>
+                <div class="kpi-change negative">↓ 45% vs January</div>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 KEY TAKEAWAY</strong>
+            <p>Despite the drop in traffic volume, <strong>user engagement improved across most metrics</strong>. Bounce rate decreased to 71.07% (-4.10pp), engagement rate increased to 28.93% (+4.10pp), and average session duration gained 10 seconds. This reinforces the pattern observed in previous months: visitors interacting with the site are more qualified or more interested in the content. <strong>Traffic quality appears more decisive than traffic quantity</strong> in this technical B2B environment.</p>
+        </div>
+
+        <div class="chart-container">
+            <h4>New Users Evolution (Oct 2025 - Feb 2026)</h4>
+            <div class="chart-wrapper">
+                <canvas id="newUsersChart"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Performance -->
+<section id="performance">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">SEO Performance</h2>
+            <p class="section-subtitle">Long-term trends and keyword analysis</p>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 LONG-TERM TRENDS</strong>
+            <p><strong>Impressions:</strong> Upward trend continues into February (+7% to 21,779) — the highest level in recent months • <strong>Clicks:</strong> Slight decline to 227 (-9%) • <strong>CTR:</strong> Declined to 1.0%, a divergence with visibility growth • <strong>Position:</strong> Continued improvement, reaching position 13 — one of the best levels on record</p>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h4>Total Impressions Evolution</h4>
+                <div class="chart-wrapper">
+                    <canvas id="impressionsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>Total Clicks Evolution</h4>
+                <div class="chart-wrapper">
+                    <canvas id="clicksChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>Average CTR Evolution</h4>
+                <div class="chart-wrapper">
+                    <canvas id="ctrChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>Average Position Evolution (lower = better)</h4>
+                <div class="chart-wrapper">
+                    <canvas id="positionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.75rem; color: white; margin: 3rem 0 1.5rem; font-family: 'Playfair Display', serif;">Top Performing Keywords</h3>
+
+        <div class="data-table expandable-table" id="keywordsTable">
+            <table>
+                <thead>
+                <tr>
+                    <th>Query</th>
+                    <th>Clicks</th>
+                    <th>Impressions</th>
+                    <th>CTR</th>
+                    <th>Position</th>
+                </tr>
+                </thead>
+                <tbody class="visible-rows">
+                <tr>
+                    <td><strong>gross leak test</strong></td>
+                    <td class="metric-value">14</td>
+                    <td>359</td>
+                    <td style="color: var(--success); font-weight: 600;">3.9%</td>
+                    <td>9.3</td>
+                </tr>
+                <tr>
+                    <td><strong>moisture calculator</strong></td>
+                    <td class="metric-value">13</td>
+                    <td>1,102</td>
+                    <td>1.2%</td>
+                    <td>14.4</td>
+                </tr>
+                <tr>
+                    <td><strong>relative humidity to ppm</strong></td>
+                    <td class="metric-value">9</td>
+                    <td>347</td>
+                    <td style="color: var(--success); font-weight: 600;">2.6%</td>
+                    <td>6.5</td>
+                </tr>
+                <tr>
+                    <td>hermeticity testing</td>
+                    <td class="metric-value">7</td>
+                    <td>271</td>
+                    <td>2.6%</td>
+                    <td>8.4</td>
+                </tr>
+                <tr>
+                    <td>humidity calculator</td>
+                    <td class="metric-value">6</td>
+                    <td>589</td>
+                    <td>1.0%</td>
+                    <td>35.0</td>
+                </tr>
+                </tbody>
+                <tbody class="hidden-rows">
+                <tr>
+                    <td>gross leak</td>
+                    <td class="metric-value">5</td>
+                    <td>466</td>
+                    <td>1.1%</td>
+                    <td>9.5</td>
+                </tr>
+                <tr>
+                    <td>leak test</td>
+                    <td class="metric-value">5</td>
+                    <td>333</td>
+                    <td>1.5%</td>
+                    <td>8.7</td>
+                </tr>
+                <tr>
+                    <td>relative humidity ppm converter</td>
+                    <td class="metric-value">4</td>
+                    <td>168</td>
+                    <td style="color: var(--success); font-weight: 600;">2.4%</td>
+                    <td>5.3</td>
+                </tr>
+                <tr>
+                    <td>oneida recherche services</td>
+                    <td class="metric-value">3</td>
+                    <td>21</td>
+                    <td style="color: var(--success); font-weight: 600;">14.3%</td>
+                    <td>1.9</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td><strong>hermeticity</strong></td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>697</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>5.0</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td>sampling cylinder</td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>439</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>33.1</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td>relative humidity calculator</td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>388</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>30.9</td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="expand-button" onclick="toggleTable('keywordsTable')">
+                <span class="expand-text">Show more keywords (7 more)</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 KEYWORD INSIGHTS</strong>
+            <p>Highly specific queries continue to perform well: <strong>"gross leak test" (3.9% CTR, position 9.3)</strong> and <strong>"relative humidity to ppm" (2.6% CTR, position 6.5)</strong> confirm strong intent alignment. The branded query "oneida recherche services" achieves an exceptional <strong>14.3% CTR at position 1.9</strong>. Despite high impressions for "hermeticity" (697), this generic term continues to generate zero clicks — a persistent gap to address.<br><br>
+                <strong style="color: var(--success);">✔ Growth opportunity:</strong> Improving SERP optimization (titles, meta descriptions) on high-impression pages to convert growing visibility into qualified traffic.
+            </p>
+        </div>
+
+        <h3 style="font-size: 1.75rem; color: white; margin: 3rem 0 1.5rem; font-family: 'Playfair Display', serif;">Top Performing Pages</h3>
+
+        <div class="data-table expandable-table" id="pagesTable">
+            <table>
+                <thead>
+                <tr>
+                    <th>Page</th>
+                    <th>Clicks</th>
+                    <th>Impressions</th>
+                    <th>CTR</th>
+                    <th>Position</th>
+                </tr>
+                </thead>
+                <tbody class="visible-rows">
+                <tr>
+                    <td><strong>/en/tools/moisture-calculator/</strong></td>
+                    <td class="metric-value">88</td>
+                    <td>7,251</td>
+                    <td>1.2%</td>
+                    <td>14.9</td>
+                </tr>
+                <tr>
+                    <td>/outils/conversions-dhumidite/</td>
+                    <td class="metric-value">47</td>
+                    <td>1,118</td>
+                    <td>4.2%</td>
+                    <td>12.8</td>
+                </tr>
+                <tr>
+                    <td>/ (Homepage EN or FR)</td>
+                    <td class="metric-value">15</td>
+                    <td>191</td>
+                    <td style="color: var(--success); font-weight: 600;">7.9%</td>
+                    <td>18.5</td>
+                </tr>
+                <tr>
+                    <td>/en/hermeticity/gross-leak-test/</td>
+                    <td class="metric-value">12</td>
+                    <td>1,587</td>
+                    <td>0.8%</td>
+                    <td>14.9</td>
+                </tr>
+                </tbody>
+                <tbody class="hidden-rows">
+                <tr>
+                    <td>/analyse-de-gaz/degazage-de-materiaux/</td>
+                    <td class="metric-value">7</td>
+                    <td>172</td>
+                    <td style="color: var(--success); font-weight: 600;">4.1%</td>
+                    <td>23.4</td>
+                </tr>
+                <tr>
+                    <td>/tests-dhermeticite/hshld/</td>
+                    <td class="metric-value">5</td>
+                    <td>523</td>
+                    <td>1.0%</td>
+                    <td>32.6</td>
+                </tr>
+                <tr>
+                    <td>/en/hermeticity/leak-site/</td>
+                    <td class="metric-value">5</td>
+                    <td>312</td>
+                    <td>1.6%</td>
+                    <td>7.1</td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="expand-button" onclick="toggleTable('pagesTable')">
+                <span class="expand-text">Show more pages (3 more)</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 PAGE INSIGHTS</strong>
+            <p><strong>Moisture Calculator</strong> and <strong>Conversions d'humidité</strong> remain the top performing pages, consolidating their leadership. The <strong>Gross Leak Test</strong> page continues to attract qualified traffic with consistent impressions. <br><br>
+                <strong style="color: var(--success);">✔ Opportunity:</strong> The /tests-dhermeticite/hshld/ page maintains high impressions (523) but a modest CTR (1.0%) — reworking its title and meta description remains a key action item.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Priorities -->
+<section id="priorities">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Strategic Priorities</h2>
+            <p class="section-subtitle">Recommendations for the coming months</p>
+        </div>
+
+        <div class="priorities-grid">
+            <div class="priority-card">
+                <div class="priority-number" style="background: var(--gradient-primary);">1</div>
+                <div class="priority-content">
+                    <h3>Improve CTR</h3>
+                    <p>Optimize titles and meta descriptions on high-impression technical pages to convert visibility into qualified traffic. The gap between growing impressions and declining CTR is the primary lever to act on.</p>
+                    <div class="target">
+                        <strong>Target:</strong> Increase average CTR above 1.5%
+                    </div>
+                </div>
+            </div>
+
+            <div class="priority-card">
+                <div class="priority-number" style="background: var(--gradient-accent);">2</div>
+                <div class="priority-content">
+                    <h3>Monitor Traffic Trend</h3>
+                    <p>The February traffic decline (-42% users, -39% sessions) should be closely monitored over March and April to determine if it reflects a seasonal fluctuation or a structural trend.</p>
+                    <div class="target">
+                        <strong>Target:</strong> Return to 500+ sessions per month
+                    </div>
+                </div>
+            </div>
+
+            <div class="priority-card">
+                <div class="priority-number" style="background: linear-gradient(135deg, #059669 0%, #10B981 100%);">3</div>
+                <div class="priority-content">
+                    <h3>Leverage Technical PDF Content</h3>
+                    <p>Transform key PDF documents into optimized landing pages integrated within the site architecture — starting with Variable_leak_rate_phenomena_in_glass_to_metal_seals.pdf.</p>
+                    <div class="target">
+                        <strong>Target:</strong> Convert top 3 PDFs into structured HTML pages
+                    </div>
+                </div>
+            </div>
+
+            <div class="priority-card">
+                <div class="priority-number" style="background: linear-gradient(135deg, #64748B 0%, #94A3B8 100%);">4</div>
+                <div class="priority-content">
+                    <h3>Content &amp; Internal Linking Updates</h3>
+                    <p>Publish proposed content on /outils/conversions-dhumidite/ (FR &amp; EN). Rework /tests-dhermeticite/hshld/ page structure to improve position and CTR. Strengthen internal linking to increase pages per session.</p>
+                    <div class="target">
+                        <strong>Status:</strong> Pending implementation
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-radius: 16px; padding: 2rem; margin-top: 3rem; text-align: center;">
+            <h3 style="color: #78350F; font-size: 1.5rem; margin-bottom: 1rem;">Success Metrics for 2026</h3>
+            <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; color: #92400E; font-weight: 600;">
+                <span>CTR > 1.5%</span>
+                <span>Bounce rate &lt; 70%</span>
+                <span>Position &lt; 14</span>
+                <span>PDF → HTML Pages</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Conclusion -->
+<section id="conclusion">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Conclusion</h2>
+        </div>
+
+        <div class="conclusion">
+            <p>February 2026 recorded a <strong>significant drop in overall traffic</strong> across all main acquisition channels. Users declined by 42% (329 vs 568), sessions by 39% (439 vs 721), and both organic and direct traffic fell substantially. No SEO updates to the site were made during the month. LinkedIn posts and one newsletter were published, contributing to a slight increase in organic social traffic (10 vs 8 sessions).</p>
+
+            <p>From an SEO perspective, the site continues to <strong>strengthen its structural visibility</strong>. Impressions reached 21,779 (+7%), the highest level in recent months. Average position improved further to 13 (vs 15 in January) — confirming a positive long-term ranking trajectory. However, CTR declined to 1.0%, widening the gap between visibility and traffic conversion.</p>
+
+            <p>Despite the volume drop, <strong>engagement metrics improved</strong>: bounce rate decreased to 71.07% (-4.10pp), engagement rate increased to 28.93% (+4.10pp), and average session duration gained 10 seconds. This confirms the recurring pattern in this technical B2B environment — fewer but more qualified visitors interact more deeply with the site content.</p>
+
+            <p><strong>Keyword analysis</strong> shows that highly specific, intent-driven queries continue to perform efficiently. The branded query "oneida recherche services" achieves a 14.3% CTR at position 1.9. The generic term "hermeticity" (697 impressions, 0 clicks) remains a persistent conversion gap despite strong visibility.</p>
+
+            <p>Tool pages remain the <strong>strongest organic assets</strong>. The Moisture Calculator and Conversions d'humidité pages continue to consolidate their leadership and generate the majority of organic clicks.</p>
+
+            <h3>Actions</h3>
+            <ol style="margin: 1rem 0 1.5rem 2rem;">
+                <li><strong>Publish the proposed content</strong> on /outils/conversions-dhumidite/ page (French and English versions)</li>
+                <li><strong>Rework the structure</strong> of the /tests-dhermeticite/hshld/ page to improve its average position and increase its CTR</li>
+                <li><strong>Optimize titles and meta descriptions</strong> on high-impression pages (hermeticity, gross leak test) to close the visibility-to-click gap</li>
+                <li><strong>Monitor March traffic</strong> to determine whether the February decline is seasonal or structural</li>
+                <li><strong>Prioritize PDF conversion</strong> into structured HTML pages — starting with Variable_leak_rate_phenomena_in_glass_to_metal_seals.pdf</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p><strong>By:</strong><a href="https://cdizign.com" target="_blank" rel="noopener noreferrer" style="color: white; font-style: italic; text-decoration: none"> cDizign.com - Stéphanie Allégret</a></p>
+        <p><strong>Report Period:</strong> February 1-28, 2026 | <strong>Next Review:</strong> April 2026</p>
+    </div>
+</footer>
+
+<script>
+    // Toggle expandable tables
+    function toggleTable(tableId) {
+        const table = document.getElementById(tableId);
+        const button = table.querySelector('.expand-button');
+        const expandText = button.querySelector('.expand-text');
+
+        table.classList.toggle('expanded');
+
+        if (table.classList.contains('expanded')) {
+            expandText.textContent = 'Show less';
+        } else {
+            if (tableId === 'keywordsTable') {
+                expandText.textContent = 'Show more keywords (7 more)';
+            } else {
+                expandText.textContent = 'Show more pages (3 more)';
+            }
+        }
+    }
+
+    // Scroll indicator
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('scrollIndicator').style.width = scrolled + '%';
+
+        // Navbar shadow on scroll
+        const navbar = document.getElementById('navbar');
+        if (winScroll > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                window.scrollTo({
+                    top: target.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Animate elements on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.kpi-card, .priority-card, .data-table').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+
+    // Chart.js default configuration
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#64748B';
+
+    // New Users Chart
+    const newUsersCtx = document.getElementById('newUsersChart');
+    if (newUsersCtx) {
+        new Chart(newUsersCtx, {
+            type: 'line',
+            data: {
+                labels: ['Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26'],
+                datasets: [{
+                    label: 'New Users',
+                    data: [608, 641, 493, 544, 300],
+                    borderColor: '#06B6D4',
+                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#06B6D4',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1E3A8A',
+                        padding: 12,
+                        cornerRadius: 8,
+                        titleFont: {size: 13, weight: 'bold'},
+                        bodyFont: {size: 12}
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toLocaleString();
+                            }
+                        },
+                        grid: {
+                            color: '#F1F5F9'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Impressions Chart
+    const impressionsCtx = document.getElementById('impressionsChart');
+    if (impressionsCtx) {
+        new Chart(impressionsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26'],
+                datasets: [{
+                    label: 'Total Impressions',
+                    data: [28000, 29500, 31000, 33500, 26803, 24476, 24500, 24075, 21000, 21500, 23500, 20500, 24519, 24888, 18135, 16692, 17910, 19222, 20334, 21779],
+                    borderColor: '#1E3A8A',
+                    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#1E3A8A',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#1E3A8A',
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toLocaleString();
+                            }
+                        },
+                        grid: {color: '#F1F5F9'}
+                    },
+                    x: {
+                        grid: {display: false},
+                        ticks: {maxRotation: 45, minRotation: 45}
+                    }
+                }
+            }
+        });
+    }
+
+    // Clicks Chart
+    const clicksCtx = document.getElementById('clicksChart');
+    if (clicksCtx) {
+        new Chart(clicksCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26'],
+                datasets: [{
+                    label: 'Total Clicks',
+                    data: [580, 500, 570, 580, 458, 312, 300, 438, 450, 430, 400, 260, 280, 246, 246, 304, 305, 251, 250, 227],
+                    borderColor: '#06B6D4',
+                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#06B6D4',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#06B6D4',
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toLocaleString();
+                            }
+                        },
+                        grid: {color: '#F1F5F9'}
+                    },
+                    x: {
+                        grid: {display: false},
+                        ticks: {maxRotation: 45, minRotation: 45}
+                    }
+                }
+            }
+        });
+    }
+
+    // CTR Chart
+    const ctrCtx = document.getElementById('ctrChart');
+    if (ctrCtx) {
+        new Chart(ctrCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26'],
+                datasets: [{
+                    label: 'Average CTR (%)',
+                    data: [2.1, 1.7, 1.84, 1.73, 1.71, 1.30, 1.22, 1.80, 2.14, 2.00, 1.70, 1.27, 1.14, 0.99, 1.36, 1.82, 1.70, 1.30, 1.20, 1.00],
+                    borderColor: '#059669',
+                    backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#059669',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#059669',
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function (context) {
+                                return 'CTR: ' + context.parsed.y.toFixed(2) + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toFixed(1) + '%';
+                            }
+                        },
+                        grid: {color: '#F1F5F9'}
+                    },
+                    x: {
+                        grid: {display: false},
+                        ticks: {maxRotation: 45, minRotation: 45}
+                    }
+                }
+            }
+        });
+    }
+
+    // Position Chart (inverted - lower is better)
+    const positionCtx = document.getElementById('positionChart');
+    if (positionCtx) {
+        new Chart(positionCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26'],
+                datasets: [{
+                    label: 'Average Position',
+                    data: [27, 28, 30, 31, 31, 31, 23, 21, 22, 29, 28, 29, 31, 31, 22, 12, 14, 16, 15, 13],
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#F59E0B',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#F59E0B',
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function (context) {
+                                return 'Position: ' + context.parsed.y.toFixed(1);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        reverse: true,
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toFixed(0);
+                            }
+                        },
+                        grid: {color: '#F1F5F9'}
+                    },
+                    x: {
+                        grid: {display: false},
+                        ticks: {maxRotation: 45, minRotation: 45}
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
