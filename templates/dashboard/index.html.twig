@@ -137,22 +137,21 @@
         }
 
         .report-card.latest {
-            border-color: var(--accent);
+            border-color: var(--success);
             position: relative;
         }
 
         .report-card.latest::after {
-            content: 'Dernier';
+            content: 'NOUVEAU';
             position: absolute;
-            top: 12px;
-            right: 12px;
-            background: var(--gradient-accent);
+            top: 1rem;
+            right: 1rem;
+            background: var(--success);
             color: white;
             font-size: 0.7rem;
             font-weight: 700;
             padding: 0.2rem 0.6rem;
             border-radius: 20px;
-            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
@@ -198,6 +197,20 @@
             letter-spacing: 0.5px;
         }
 
+        .report-stat-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.15rem;
+        }
+
+        .report-stat-change.positive {
+            color: var(--success);
+        }
+
+        .report-stat-change.negative {
+            color: var(--danger);
+        }
+
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -222,31 +235,28 @@
             color: var(--text-secondary);
         }
 
-        /* ===== Charts Section ===== */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
+        .success-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
             margin-top: 1rem;
-            margin-bottom: 2rem;
         }
 
-        .chart-card {
-            background: white;
-            border-radius: 14px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .chart-card h3 {
-            font-size: 0.95rem;
-            color: var(--primary);
+        .success-metric {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            font-size: 0.95rem;
         }
 
-        .chart-card canvas {
-            max-height: 220px;
+        .success-metric.achieved {
+            color: var(--success);
+        }
+
+        .success-metric.pending {
+            color: var(--text-secondary);
         }
 
         @media (max-width: 768px) {
@@ -261,297 +271,229 @@
             .reports-grid {
                 grid-template-columns: 1fr;
             }
-
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">Dashboard SEO</h1>
-        <p class="dashboard-subtitle">Vue d'ensemble de vos rapports mensuels</p>
+<div class="dashboard-header">
+    <h1 class="dashboard-title">Dashboard SEO</h1>
+    <p class="dashboard-subtitle">Vue d'ensemble de vos rapports mensuels</p>
+</div>
+
+<div class="welcome-card">
+    <h2>👋 Bonjour {{ user.firstName }} !</h2>
+    <p>Bienvenue sur votre tableau de bord SEO. Vous pouvez consulter ici l'historique complet de vos rapports mensuels et suivre l'évolution de vos performances.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Rapports disponibles</div>
+        <div class="stat-value">5</div>
+        <div class="stat-description">Novembre 2025 à Mars 2026</div>
     </div>
-
-    <div class="welcome-card">
-        <h2>👋 Bonjour {{ user.firstName }} !</h2>
-        <p>Bienvenue sur votre tableau de bord SEO. Vous pouvez consulter ici l'historique complet de vos rapports mensuels et suivre l'évolution de vos performances.</p>
+    
+    <div class="stat-card" style="border-top-color: var(--success);">
+        <div class="stat-label">Dernier rapport</div>
+        <div class="stat-value">Mars 2026</div>
+        <div class="stat-description">Rebond confirmé — efficacité SEO record</div>
     </div>
-
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-label">Rapports disponibles</div>
-            <div class="stat-value">4</div>
-            <div class="stat-description">Novembre 2025 à Février 2026</div>
-        </div>
-
-        <div class="stat-card" style="border-top-color: var(--success);">
-            <div class="stat-label">Dernier rapport</div>
-            <div class="stat-value">Fév 2026</div>
-            <div class="stat-description">Publié récemment</div>
-        </div>
-
-        <div class="stat-card" style="border-top-color: var(--warning);">
-            <div class="stat-label">Période couverte</div>
-            <div class="stat-value">4 mois</div>
-            <div class="stat-description">Nov 2025 - Fév 2026</div>
-        </div>
+    
+    <div class="stat-card" style="border-top-color: var(--warning);">
+        <div class="stat-label">Période couverte</div>
+        <div class="stat-value">5 mois</div>
+        <div class="stat-description">Nov 2025 - Mar 2026</div>
     </div>
+</div>
 
-    {# ===== Graphiques SEO ===== #}
-    {% if seoChartData is defined and seoChartData.labels|default([])|length > 1 %}
-        <div class="reports-section">
-            <h2 class="section-title">📈 Évolution des performances</h2>
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <h3>Impressions & Clics</h3>
-                    <canvas id="seoTrafficChart"></canvas>
+<div class="reports-section">
+    <h2 class="section-title">📊 Rapports mensuels</h2>
+    
+    <div class="reports-grid">
+        <!-- Rapport Mars 2026 -->
+        <div class="report-card latest" onclick="alert('Fonctionnalité à venir : consultation du rapport Mars 2026')">
+            <div class="report-date">Mars 2026</div>
+            <div class="report-meta">
+                <span>📅 01/03 - 31/03/2026</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Rebond confirmé après février — efficacité SEO record avec la meilleure position moyenne (10) et un CTR en forte hausse.
+            </p>
+            <div class="report-stats">
+                <div class="report-stat">
+                    <div class="report-stat-value">16,946</div>
+                    <div class="report-stat-label">Impressions</div>
+                    <div class="report-stat-change negative">↓ 22% vs Fév</div>
                 </div>
-                <div class="chart-card">
-                    <h3>Trafic organique & Utilisateurs</h3>
-                    <canvas id="seoSessionsChart"></canvas>
+                <div class="report-stat">
+                    <div class="report-stat-value">206</div>
+                    <div class="report-stat-label">Sessions org.</div>
+                    <div class="report-stat-change positive">↑ 40% vs Fév</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">1.50%</div>
+                    <div class="report-stat-label">CTR</div>
+                    <div class="report-stat-change positive">↑ 50% vs Fév</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">Position 10</div>
+                    <div class="report-stat-label">Classement</div>
+                    <div class="report-stat-change positive">↑ 3 pos. vs Fév</div>
                 </div>
             </div>
         </div>
-    {% endif %}
 
-    <div class="reports-section">
-        <h2 class="section-title">📊 Rapports mensuels</h2>
-
-        <div class="reports-grid">
-            <!-- Rapport Février 2026 -->
-            <div class="report-card latest" onclick="alert('Fonctionnalité à venir : consultation du rapport Février 2026')">
-                <div class="report-date">Février 2026</div>
-                <div class="report-meta">
-                    <span>📅 01/02 - 28/02/2026</span>
+        <!-- Rapport Février 2026 -->
+        <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Février 2026')">
+            <div class="report-date">Février 2026</div>
+            <div class="report-meta">
+                <span>📅 01/02 - 28/02/2026</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Baisse de trafic significative mais visibilité SEO en croissance avec des positions améliorées.
+            </p>
+            <div class="report-stats">
+                <div class="report-stat">
+                    <div class="report-stat-value">21,779</div>
+                    <div class="report-stat-label">Impressions</div>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                    Baisse significative du trafic mais amélioration continue de la visibilité SEO et du classement (position 13).
-                </p>
-                <div class="report-stats">
-                    <div class="report-stat">
-                        <div class="report-stat-value">21,779</div>
-                        <div class="report-stat-label">Impressions</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">147</div>
-                        <div class="report-stat-label">Sessions</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">1.00%</div>
-                        <div class="report-stat-label">CTR</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">Position 13</div>
-                        <div class="report-stat-label">Classement</div>
-                    </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">147</div>
+                    <div class="report-stat-label">Sessions org.</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">1.00%</div>
+                    <div class="report-stat-label">CTR</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">Position 13</div>
+                    <div class="report-stat-label">Classement</div>
                 </div>
             </div>
+        </div>
 
-            <!-- Rapport Janvier 2026 -->
-            <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Janvier 2026')">
-                <div class="report-date">Janvier 2026</div>
-                <div class="report-meta">
-                    <span>📅 01/01 - 31/01/2026</span>
+        <!-- Rapport Janvier 2026 -->
+        <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Janvier 2026')">
+            <div class="report-date">Janvier 2026</div>
+            <div class="report-meta">
+                <span>📅 01/01 - 31/01/2026</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Reprise post-saisonnière, trajectoire SEO stable et progressive avec visibilité en croissance.
+            </p>
+            <div class="report-stats">
+                <div class="report-stat">
+                    <div class="report-stat-value">20,334</div>
+                    <div class="report-stat-label">Impressions</div>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                    Reprise post-fêtes avec croissance du trafic direct et maintien du trafic organique.
-                </p>
-                <div class="report-stats">
-                    <div class="report-stat">
-                        <div class="report-stat-value">20,334</div>
-                        <div class="report-stat-label">Impressions</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">215</div>
-                        <div class="report-stat-label">Sessions</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">1.20%</div>
-                        <div class="report-stat-label">CTR</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">Position 15</div>
-                        <div class="report-stat-label">Classement</div>
-                    </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">215</div>
+                    <div class="report-stat-label">Sessions org.</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">1.20%</div>
+                    <div class="report-stat-label">CTR</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">Position 15</div>
+                    <div class="report-stat-label">Classement</div>
                 </div>
             </div>
+        </div>
 
-            <!-- Rapport Décembre 2025 -->
-            <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Décembre 2025')">
-                <div class="report-date">Décembre 2025</div>
-                <div class="report-meta">
-                    <span>📅 01/12 - 31/12/2025</span>
+        <!-- Rapport Décembre 2025 -->
+        <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Décembre 2025')">
+            <div class="report-date">Décembre 2025</div>
+            <div class="report-meta">
+                <span>📅 01/12 - 31/12/2025</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Ralentissement temporaire dû aux effets saisonniers, mais amélioration notable de l'engagement.
+            </p>
+            <div class="report-stats">
+                <div class="report-stat">
+                    <div class="report-stat-value">19,222</div>
+                    <div class="report-stat-label">Impressions</div>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                    Ralentissement temporaire dû aux effets saisonniers, mais amélioration notable de l'engagement.
-                </p>
-                <div class="report-stats">
-                    <div class="report-stat">
-                        <div class="report-stat-value">19,222</div>
-                        <div class="report-stat-label">Impressions</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">208</div>
-                        <div class="report-stat-label">Sessions</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">1.30%</div>
-                        <div class="report-stat-label">CTR</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">Position 16</div>
-                        <div class="report-stat-label">Classement</div>
-                    </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">208</div>
+                    <div class="report-stat-label">Sessions org.</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">1.30%</div>
+                    <div class="report-stat-label">CTR</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">Position 16</div>
+                    <div class="report-stat-label">Classement</div>
                 </div>
             </div>
+        </div>
 
-            <!-- Rapport Novembre 2025 -->
-            <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Novembre 2025')">
-                <div class="report-date">Novembre 2025</div>
-                <div class="report-meta">
-                    <span>📅 01/11 - 30/11/2025</span>
+        <!-- Rapport Novembre 2025 -->
+        <div class="report-card" onclick="alert('Fonctionnalité à venir : consultation du rapport Novembre 2025')">
+            <div class="report-date">Novembre 2025</div>
+            <div class="report-meta">
+                <span>📅 01/11 - 30/11/2025</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Croissance continue du trafic organique et direct, avec une visibilité en amélioration.
+            </p>
+            <div class="report-stats">
+                <div class="report-stat">
+                    <div class="report-stat-value">17,910</div>
+                    <div class="report-stat-label">Impressions</div>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                    Croissance continue du trafic organique et direct, avec une visibilité en amélioration.
-                </p>
-                <div class="report-stats">
-                    <div class="report-stat">
-                        <div class="report-stat-value">17,910</div>
-                        <div class="report-stat-label">Impressions</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">261</div>
-                        <div class="report-stat-label">Sessions</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">1.70%</div>
-                        <div class="report-stat-label">CTR</div>
-                    </div>
-                    <div class="report-stat">
-                        <div class="report-stat-value">Position 14</div>
-                        <div class="report-stat-label">Classement</div>
-                    </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">261</div>
+                    <div class="report-stat-label">Sessions org.</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">1.70%</div>
+                    <div class="report-stat-label">CTR</div>
+                </div>
+                <div class="report-stat">
+                    <div class="report-stat-value">Position 14</div>
+                    <div class="report-stat-label">Classement</div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="reports-section">
-        <h2 class="section-title">Prochaines étapes</h2>
+<div class="reports-section">
+    <h2 class="section-title">🎯 Objectifs 2026 — Suivi</h2>
 
-        <div class="welcome-card" style="border-left-color: var(--warning);">
-            <h2 style="color: var(--warning);">Actions recommandées</h2>
-            <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
-                <li><strong>Priorité 1 :</strong> Améliorer le CTR — Optimiser titres et meta descriptions sur les pages à forte visibilité</li>
-                <li><strong>Priorité 2 :</strong> Surveiller la tendance du trafic — La baisse de février (-42% utilisateurs) doit être observée sur mars/avril</li>
-                <li><strong>Priorité 3 :</strong> Exploiter le contenu PDF technique — Transformer les PDF performants en pages HTML optimisées</li>
-                <li><strong>Priorité 4 :</strong> Maillage interne et contenu — Restructurer les pages pour améliorer position et engagement</li>
-            </ul>
-        </div>
-
-        <div class="welcome-card" style="border-left-color: var(--success);">
-            <h2 style="color: var(--success);">Actions en cours</h2>
-            <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
-                <li>📝 Publication du contenu proposé sur /outils/conversions-dhumidite/ — <em>En attente d'approbation par ORSLabs</em></li>
-                <li>📝 Refonte du contenu /tests-dhermeticite/hshld/ — <em>En attente d'approbation d'une optimisation de la structure par ORSLabs</em></li>
-                <li>📝 Conversion PDF → HTML (Variable_leak_rate_phenomena_in_glass_to_metal_seals.pdf) — <em>En attente d'approbation par ORSLabs</em></li>
-            </ul>
+    <div class="welcome-card" style="border-left-color: var(--success);">
+        <h2 style="color: var(--success);">Objectifs atteints en mars 2026</h2>
+        <div class="success-metrics">
+            <div class="success-metric achieved">✅ CTR > 1.5% (atteint : 1.50%)</div>
+            <div class="success-metric achieved">✅ Bounce rate < 70% (atteint : 69.34%)</div>
+            <div class="success-metric achieved">✅ Position < 14 (atteint : 10)</div>
+            <div class="success-metric pending">⏳ PDF → HTML Pages (en attente)</div>
         </div>
     </div>
+</div>
+
+<div class="reports-section">
+    <h2 class="section-title">🎯 Prochaines étapes</h2>
+    
+    <div class="welcome-card" style="border-left-color: var(--warning);">
+        <h2 style="color: var(--warning);">Actions recommandées</h2>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 1rem;">
+            <li><strong>Priorité 1 :</strong> Améliorer le CTR sur les pages techniques à forte visibilité</li>
+            <li><strong>Priorité 2 :</strong> Renforcer le maillage interne pour augmenter la profondeur de visite</li>
+            <li><strong>Priorité 3 :</strong> Continuer l'optimisation des pages outils (Moisture Calculator, Conversions d'humidité)</li>
+            <li><strong>Priorité 4 :</strong> Conversion des PDF techniques en landing pages HTML optimisées</li>
+        </ul>
+        <p style="color: var(--text-secondary); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <strong>Actions en attente :</strong>
+        </p>
+        <ul style="color: var(--text-secondary); line-height: 2; margin-top: 0.5rem; font-size: 0.9rem;">
+            <li>Publier le contenu proposé sur /outils/conversions-dhumidite/ (FR + EN) — <em>en attente d'approbation ORS Labs</em></li>
+            <li>Refonte de la page /tests-dhermeticite/hshld/ — <em>en attente d'approbation ORS Labs</em></li>
+            <li>Conversion PDF → HTML (Variable_leak_rate_phenomena_in_glass_to_metal_seals.pdf) — <em>en attente d'approbation ORS Labs</em></li>
+        </ul>
+    </div>
+</div>
 {% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-
-    {% if seoChartData is defined and seoChartData.labels|default([])|length > 1 %}
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-        <script>
-            const chartDefaults = {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 16,
-                            font: { family: 'Inter', size: 12 }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { font: { family: 'Inter', size: 11 } }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#f1f5f9' },
-                        ticks: { font: { family: 'Inter', size: 11 } }
-                    }
-                }
-            };
-
-            // Impressions & Clics
-            new Chart(document.getElementById('seoTrafficChart'), {
-                type: 'bar',
-                data: {
-                    labels: {{ seoChartData.labels|json_encode|raw }},
-                    datasets: [
-                        {
-                            label: 'Impressions',
-                            data: {{ seoChartData.datasets.impressions|json_encode|raw }},
-                            backgroundColor: 'rgba(30, 58, 138, 0.7)',
-                            borderRadius: 6,
-                            barPercentage: 0.6,
-                        },
-                        {
-                            label: 'Clics',
-                            data: {{ seoChartData.datasets.clicks|json_encode|raw }},
-                            backgroundColor: 'rgba(6, 182, 212, 0.7)',
-                            borderRadius: 6,
-                            barPercentage: 0.6,
-                        }
-                    ]
-                },
-                options: chartDefaults
-            });
-
-            // Sessions & Utilisateurs
-            new Chart(document.getElementById('seoSessionsChart'), {
-                type: 'line',
-                data: {
-                    labels: {{ seoChartData.labels|json_encode|raw }},
-                    datasets: [
-                        {
-                            label: 'Sessions organiques',
-                            data: {{ seoChartData.datasets.organicSessions|json_encode|raw }},
-                            borderColor: '#059669',
-                            backgroundColor: 'rgba(5, 150, 105, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                        },
-                        {
-                            label: 'Utilisateurs uniques',
-                            data: {{ seoChartData.datasets.totalUsers|json_encode|raw }},
-                            borderColor: '#F59E0B',
-                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                        }
-                    ]
-                },
-                options: chartDefaults
-            });
-        </script>
-    {% endif %}
-{% endblock %}
-
-
