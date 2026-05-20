@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Monitoring - April 2026 | ORS Labs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #1E3A8A;
+            --primary-light: #3B82F6;
+            --accent: #06B6D4;
+            --accent-dark: #0891B2;
+            --surface: #FFFFFF;
+            --background: #F8FAFC;
+            --text-primary: #1E293B;
+            --theme: #062e57;
+            --theme-dark: #101b2c;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+            --success: #059669;
+            --warning: #F59E0B;
+            --danger: #DC2626;
+            --linkedin: #0A66C2;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            --gradient-vertical: linear-gradient(180deg, var(--theme) 0%, var(--primary-light) 100%);
+            --gradient-linkedin: linear-gradient(135deg, #0A66C2 0%, #0077B5 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 2rem 4rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        .hero .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            animation: fadeInUp 0.8s ease 0.6s backwards;
+        }
+
+        .hero-meta-item {
+            text-align: center;
+        }
+
+        .hero-meta-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .hero-meta-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Section */
+        section {
+            padding: 2rem 0;
+            animation: fadeIn 1s ease;
+            background: #062e57;
+        }
+
+        section:nth-child(even) {
+            background: #062e57;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-card.primary::before {
+            background: var(--gradient-primary);
+        }
+
+        .kpi-card.linkedin::before {
+            background: var(--gradient-linkedin);
+        }
+
+        .kpi-card.linkedin {
+            border: 2px solid var(--linkedin);
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .kpi-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-card.linkedin .kpi-value {
+            color: var(--linkedin);
+        }
+
+        .kpi-change {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .kpi-change.positive {
+            color: var(--success);
+        }
+
+        .kpi-change.negative {
+            color: var(--danger);
+        }
+
+        .kpi-change.neutral {
+            color: var(--text-secondary);
+        }
+
+        .kpi-change.linkedin-highlight {
+            color: var(--linkedin);
+            font-weight: 700;
+        }
+
+        /* LinkedIn Badge */
+        .linkedin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient-linkedin);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .linkedin-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Insight Box */
+        .insight-box {
+            background: #FEF3C7;
+            border-left: 4px solid var(--warning);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            animation: slideInLeft 0.6s ease;
+        }
+
+        .insight-box strong {
+            color: #92400E;
+            font-weight: 600;
+        }
+
+        .insight-box p {
+            color: #78350F;
+            margin: 0.5rem 0 0;
+        }
+
+        .insight-box.linkedin {
+            background: linear-gradient(135deg, #E7F3FF 0%, #D4ECFF 100%);
+            border-left-color: var(--linkedin);
+        }
+
+        .insight-box.linkedin strong {
+            color: #0A66C2;
+        }
+
+        .insight-box.linkedin p {
+            color: #1A4971;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            overflow-y: visible;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin: 2rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .data-table table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--gradient-vertical);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-top-color: #06aecd !important;
+            border-top-style: solid;
+            border-top-width: 3px;
+        }
+
+        .data-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--background);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table .metric-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Expandable Table */
+        .expandable-table {
+            position: relative;
+        }
+
+        .expandable-table .hidden-rows {
+            display: none;
+        }
+
+        .expandable-table.expanded .hidden-rows {
+            display: table-row-group;
+        }
+
+        .expand-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(180deg, transparent 0%, white 20%);
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .expand-button:hover {
+            color: var(--accent);
+        }
+
+        .expand-button svg {
+            transition: transform 0.3s ease;
+        }
+
+        .expandable-table.expanded .expand-button svg {
+            transform: rotate(180deg);
+        }
+
+        .expandable-table.expanded .expand-button {
+            margin-top: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Priorities */
+        .priorities-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .priority-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            display: flex;
+            gap: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .priority-card:hover {
+            transform: translateX(8px);
+        }
+
+        .priority-number {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .priority-content h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .priority-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .priority-content .target {
+            background: var(--background);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        .priority-content .target strong {
+            color: var(--primary);
+        }
+
+        /* Conclusion */
+        .conclusion {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .conclusion p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .conclusion h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 2rem 0 1rem;
+        }
+
+        /* LinkedIn Highlight Box */
+        .linkedin-highlight-box {
+            background: linear-gradient(135deg, #E7F3FF 0%, #D4ECFF 100%);
+            border: 2px solid var(--linkedin);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .linkedin-highlight-box .icon {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-linkedin);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .linkedin-highlight-box .icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .linkedin-highlight-box .content h4 {
+            color: var(--linkedin);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .linkedin-highlight-box .content p {
+            color: #1A4971;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .linkedin-highlight-box .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .linkedin-highlight-box .stat {
+            text-align: center;
+        }
+
+        .linkedin-highlight-box .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--linkedin);
+        }
+
+        .linkedin-highlight-box .stat-label {
+            font-size: 0.85rem;
+            color: #1A4971;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.9;
+            margin: 0.5rem 0;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .charts-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .linkedin-highlight-box {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .linkedin-highlight-box .stats {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-meta {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .priority-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .conclusion {
+                padding: 2rem;
+            }
+
+            .data-table {
+                border-radius: 8px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .chart-container {
+                padding: 1.5rem;
+            }
+
+            .chart-wrapper {
+                height: 250px;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .hero {
+                padding: 4rem 1rem 3rem;
+            }
+
+            .insight-box {
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero .description {
+                font-size: 1rem;
+            }
+
+            .hero-meta-value {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .kpi-value {
+                font-size: 2.5rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.75rem;
+            }
+
+            .chart-container {
+                padding: 1rem;
+            }
+
+            .chart-container h4 {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .chart-wrapper {
+                height: 220px;
+            }
+
+            .priority-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .priority-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .nav-brand {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            margin: 2rem 0;
+        }
+
+        .chart-container h4 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+    </style>
+    <link rel="icon"
+          href="https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_192,h_192/https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png"
+          sizes="192x192"/>
+    <link rel="apple-touch-icon"
+          href="https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_180,h_180/https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png"/>
+    <meta name="msapplication-TileImage"
+          content="https://www.orslabs.fr/wp-content/uploads/2018/01/logo_ors_square128.png"/>
+</head>
+<body>
+<div class="scroll-indicator" id="scrollIndicator"></div>
+
+<!-- Navigation -->
+<nav id="navbar">
+    <div class="nav-container">
+        <div class="nav-brand">Oneida Research Services - SEO</div>
+        <ul class="nav-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#traffic">Traffic</a></li>
+            <li><a href="#performance">Performance</a></li>
+            <li><a href="#priorities">Priorities</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>SEO Monitoring</h1>
+        <p class="subtitle">April 2026</p>
+        <p class="description">Comprehensive analysis of orslabs.fr organic search performance, traffic patterns, and
+            strategic recommendations for the coming months</p>
+
+        <div class="hero-meta">
+            <div class="hero-meta-item">
+                <span class="hero-meta-value">17,396</span>
+                <span class="hero-meta-label">Total Impressions</span>
+            </div>
+            <div class="hero-meta-item">
+                <span class="hero-meta-value">211</span>
+                <span class="hero-meta-label">Total Clicks</span>
+            </div>
+            <div class="hero-meta-item">
+                <span class="hero-meta-value">Position 10</span>
+                <span class="hero-meta-label">Avg Ranking</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Overview -->
+<section id="overview">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Executive Summary</h2>
+            <p class="section-subtitle">April confirms overall stabilization — engagement quality reaches its highest level of the reporting period while rankings hold at position 10</p>
+        </div>
+
+        <!-- LinkedIn Highlight -->
+        <div class="linkedin-highlight-box">
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+            </div>
+            <div class="content">
+                <h4>LinkedIn &amp; Newsletter Activity</h4>
+                <p>LinkedIn posts were published in April, but no newsletter was sent. Organic social traffic
+                    remained stable at <strong>13 sessions</strong> (vs 12 in March), confirming the consistent contribution
+                    of social channels as a secondary acquisition source.</p>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">13</div>
+                        <div class="stat-label">Organic Social Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">+8%</div>
+                        <div class="stat-label">vs March</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card primary">
+                <div class="kpi-label">Organic Traffic</div>
+                <div class="kpi-value">191</div>
+                <div class="kpi-change negative">↓ 7% vs March</div>
+            </div>
+
+            <div class="kpi-card primary">
+                <div class="kpi-label">Direct Traffic</div>
+                <div class="kpi-value">277</div>
+                <div class="kpi-change positive">↑ 5% vs March</div>
+            </div>
+
+            <div class="kpi-card linkedin">
+                <div class="kpi-label">Organic Social</div>
+                <div class="kpi-value">13</div>
+                <div class="kpi-change linkedin-highlight">↑ vs 12 in March</div>
+                <span class="linkedin-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    LinkedIn
+                </span>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Total Impressions</div>
+                <div class="kpi-value">17,396</div>
+                <div class="kpi-change positive">↑ 3% vs March</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Total Clicks</div>
+                <div class="kpi-value">211</div>
+                <div class="kpi-change negative">↓ 16% vs March</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Average CTR</div>
+                <div class="kpi-value">1.20%</div>
+                <div class="kpi-change negative">↓ 20% vs March</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Average Position</div>
+                <div class="kpi-value">10</div>
+                <div class="kpi-change neutral">≈ Stable vs March</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Total Unique Users</div>
+                <div class="kpi-value">407</div>
+                <div class="kpi-change positive">↑ 4% vs March</div>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 KEY TAKEAWAY</strong>
+            <p>April marks an overall <strong>stabilization</strong> of the site's performance after March's rebound.
+                Traffic remained broadly consistent across channels, with a notable <strong>increase in paid search</strong> (+260%) suggesting active campaigns this month.
+                Although clicks and organic sessions declined, <strong>rankings held at position 10</strong> — the best level on record —
+                and impressions continued to grow slightly. The most striking evolution is the <strong>significant improvement in engagement quality</strong>:
+                engagement rate rose to 35.77% and average session duration nearly doubled to 3:14, the best performance in recent months.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Traffic Sources -->
+<section id="traffic">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Traffic Analysis</h2>
+            <p class="section-subtitle">Distribution and evolution of traffic sources</p>
+        </div>
+
+        <div class="data-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Apr 2026</th>
+                    <th>Mar 2026</th>
+                    <th>Feb 2026</th>
+                    <th>Jan 2026</th>
+                    <th>Dec 2025</th>
+                    <th>Change vs Mar</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>Organic Search</strong></td>
+                    <td class="metric-value">191</td>
+                    <td>206</td>
+                    <td>147</td>
+                    <td>215</td>
+                    <td>208</td>
+                    <td style="color: var(--danger); font-weight: 600;">-7%</td>
+                </tr>
+                <tr>
+                    <td><strong>Direct</strong></td>
+                    <td class="metric-value">277</td>
+                    <td>264</td>
+                    <td>276</td>
+                    <td>484</td>
+                    <td>380</td>
+                    <td style="color: var(--success); font-weight: 600;">+5%</td>
+                </tr>
+                <tr style="background: linear-gradient(90deg, #E7F3FF 0%, white 100%);">
+                    <td><strong style="color: var(--linkedin);">🔗 Organic Social</strong></td>
+                    <td class="metric-value" style="color: var(--linkedin);">13</td>
+                    <td>12</td>
+                    <td>10</td>
+                    <td>8</td>
+                    <td>18</td>
+                    <td style="color: var(--success); font-weight: 600;">+8%</td>
+                </tr>
+                <tr>
+                    <td><strong>Referral</strong></td>
+                    <td class="metric-value">7</td>
+                    <td>8</td>
+                    <td>3</td>
+                    <td>5</td>
+                    <td>8</td>
+                    <td style="color: var(--text-secondary); font-weight: 600;">-13%</td>
+                </tr>
+                <tr>
+                    <td><strong>Paid Search</strong></td>
+                    <td class="metric-value">72</td>
+                    <td>20</td>
+                    <td>3</td>
+                    <td>8</td>
+                    <td>1</td>
+                    <td style="color: var(--success); font-weight: 600;">+260%</td>
+                </tr>
+                <tr>
+                    <td><strong>Unassigned</strong></td>
+                    <td class="metric-value">1</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td style="color: var(--text-secondary); font-weight: 600;">—</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight-box linkedin">
+            <strong>🔗 LINKEDIN &amp; NEWSLETTER UPDATE</strong>
+            <p>LinkedIn posts were published in April, but no newsletter was sent. Organic social traffic
+                remained stable at <strong>13 sessions</strong> (vs 12 in March). The most notable shift this month
+                is the strong increase in <strong>paid search to 72 sessions</strong> (+260%), reflecting active campaigns
+                that complement the site's natural acquisition mix.</p>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Sessions</div>
+                <div class="kpi-value">562</div>
+                <div class="kpi-change positive">↑ 10% vs March</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Bounce Rate</div>
+                <div class="kpi-value">64.23%</div>
+                <div class="kpi-change positive">↓ 5.11pp vs March</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Engagement Rate</div>
+                <div class="kpi-value">35.77%</div>
+                <div class="kpi-change positive">↑ 5.11pp vs March</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Pages per Session</div>
+                <div class="kpi-value">1.40</div>
+                <div class="kpi-change positive">↑ 9% vs March (1.28)</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">Avg Session Duration</div>
+                <div class="kpi-value">3:14</div>
+                <div class="kpi-change positive">↑ +1:31 vs March (1:43)</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">New Users</div>
+                <div class="kpi-value">377</div>
+                <div class="kpi-change positive">↑ 4% vs March</div>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 KEY TAKEAWAY</strong>
+            <p>April marks a significant <strong>improvement in engagement quality</strong>. Users are not only visiting
+                the site more frequently but also <strong>interacting more deeply</strong> with the content — average session
+                duration nearly doubled to 3:14, and engagement rate reached its best level in recent months at 35.77%.
+                This reinforces the idea that ORS Labs continues to attract highly qualified technical audiences. The
+                pages retaining users the most include <em>/en/tools/moisture-calculator/ (7:31)</em>,
+                <em>/analyse-de-gaz/cylindre/ (5:13)</em> and <em>/tests-dhermeticite/hshld/ (4:01)</em>.</p>
+        </div>
+
+        <div class="chart-container">
+            <h4>New Users Evolution (Nov 2025 - Apr 2026)</h4>
+            <div class="chart-wrapper">
+                <canvas id="newUsersChart"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Performance -->
+<section id="performance">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">SEO Performance</h2>
+            <p class="section-subtitle">Long-term trends and keyword analysis</p>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 LONG-TERM TRENDS</strong>
+            <p><strong>Impressions:</strong> Increased slightly to 17,396 (+3%), continuing a moderate upward trend •
+                <strong>Clicks:</strong> Declined to 211 (-16%), reflecting weaker SERP-to-traffic conversion this month •
+                <strong>CTR:</strong> Slipped to 1.20% (vs 1.50% in March), reinforcing the need for CTR optimization •
+                <strong>Position:</strong> Held at average position 10, matching March — the best level on record</p>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h4>Total Impressions Evolution</h4>
+                <div class="chart-wrapper">
+                    <canvas id="impressionsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>Total Clicks Evolution</h4>
+                <div class="chart-wrapper">
+                    <canvas id="clicksChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>Average CTR Evolution</h4>
+                <div class="chart-wrapper">
+                    <canvas id="ctrChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>Average Position Evolution (lower = better)</h4>
+                <div class="chart-wrapper">
+                    <canvas id="positionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.75rem; color: white; margin: 3rem 0 1.5rem; font-family: 'Playfair Display', serif;">Top
+            Performing Keywords</h3>
+
+        <div class="data-table expandable-table" id="keywordsTable">
+            <table>
+                <thead>
+                <tr>
+                    <th>Query</th>
+                    <th>Clicks</th>
+                    <th>Impressions</th>
+                    <th>CTR</th>
+                    <th>Position</th>
+                </tr>
+                </thead>
+                <tbody class="visible-rows">
+                <tr style="background: #DCFCE7;">
+                    <td><strong>hermeticity of electronic packages</strong></td>
+                    <td class="metric-value">4</td>
+                    <td>13</td>
+                    <td style="color: var(--success); font-weight: 600;">30.8%</td>
+                    <td>1.3</td>
+                </tr>
+                <tr>
+                    <td><strong>orslabs</strong></td>
+                    <td class="metric-value">3</td>
+                    <td>123</td>
+                    <td style="color: var(--success); font-weight: 600;">2.4%</td>
+                    <td>10.0</td>
+                </tr>
+                <tr>
+                    <td><strong>oneida research services</strong></td>
+                    <td class="metric-value">2</td>
+                    <td>257</td>
+                    <td>0.8%</td>
+                    <td>7.0</td>
+                </tr>
+                <tr>
+                    <td><strong>oneida recherche services</strong></td>
+                    <td class="metric-value">2</td>
+                    <td>13</td>
+                    <td style="color: var(--success); font-weight: 600;">15.4%</td>
+                    <td>2.0</td>
+                </tr>
+                <tr>
+                    <td><strong>ors lab</strong></td>
+                    <td class="metric-value">2</td>
+                    <td>13</td>
+                    <td style="color: var(--success); font-weight: 600;">15.4%</td>
+                    <td>9.8</td>
+                </tr>
+                <tr>
+                    <td>gross leak test</td>
+                    <td class="metric-value">1</td>
+                    <td>221</td>
+                    <td>0.5%</td>
+                    <td>4.5</td>
+                </tr>
+                <tr>
+                    <td>moisture calculator</td>
+                    <td class="metric-value">1</td>
+                    <td>78</td>
+                    <td>1.3%</td>
+                    <td>7.2</td>
+                </tr>
+                </tbody>
+                <tbody class="hidden-rows">
+                <tr>
+                    <td>package gas analysis</td>
+                    <td class="metric-value">1</td>
+                    <td>33</td>
+                    <td style="color: var(--success); font-weight: 600;">3.0%</td>
+                    <td>16.9</td>
+                </tr>
+                <tr>
+                    <td>moisture content of air calculator</td>
+                    <td class="metric-value">1</td>
+                    <td>25</td>
+                    <td style="color: var(--success); font-weight: 600;">4.0%</td>
+                    <td>6.5</td>
+                </tr>
+                <tr>
+                    <td>moisture content in air calculator</td>
+                    <td class="metric-value">1</td>
+                    <td>22</td>
+                    <td style="color: var(--success); font-weight: 600;">4.5%</td>
+                    <td>8.5</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td><strong>hermeticity</strong></td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>701</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>5.3</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td>ors labs</td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>168</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>10.7</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td>gross leak bubble tester</td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>157</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>8.2</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td>relative humidity question (long-tail)</td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>143</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>7.8</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td>4.25e-3 "6.02e-3"</td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>123</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>4.5</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td>gross leak</td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>91</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>2.6</td>
+                </tr>
+                <tr style="background: #FEE2E2;">
+                    <td>iva ors</td>
+                    <td style="color: var(--danger); font-weight: 600;">0</td>
+                    <td>79</td>
+                    <td style="color: var(--danger); font-weight: 600;">0%</td>
+                    <td>12.4</td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="expand-button" onclick="toggleTable('keywordsTable')">
+                <span class="expand-text">Show more keywords (10 more)</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 KEYWORD INSIGHTS</strong>
+            <p>Search performance continues to rely on a mix of <strong>branded searches and highly targeted technical queries</strong>.
+                The standout result this month is <em>"hermeticity of electronic packages"</em>, which achieved an exceptional
+                <strong>30.8% CTR at position 1.3</strong> — a strong illustration of the value of intent-driven, problem-solving content.<br><br>
+                Broad generic terms such as <em>hermeticity</em> (701 impressions, 0 clicks) and <em>gross leak bubble tester</em>
+                still contribute mainly to visibility rather than traffic, highlighting the ongoing CTR challenge on high-impression
+                pages.<br><br>
+                <strong style="color: var(--success);">✔ Growth opportunity:</strong> The strongest SEO gains continue
+                to come from specialized, intent-driven technical content. Expanding highly targeted engineering and
+                calculation-related content remains the most reliable lever for qualified acquisition.
+            </p>
+        </div>
+
+        <h3 style="font-size: 1.75rem; color: white; margin: 3rem 0 1.5rem; font-family: 'Playfair Display', serif;">Top
+            Performing Pages</h3>
+
+        <div class="data-table expandable-table" id="pagesTable">
+            <table>
+                <thead>
+                <tr>
+                    <th>Page</th>
+                    <th>Clicks</th>
+                    <th>Impressions</th>
+                    <th>CTR</th>
+                    <th>Position</th>
+                </tr>
+                </thead>
+                <tbody class="visible-rows">
+                <tr>
+                    <td><strong>/en/tools/moisture-calculator/</strong></td>
+                    <td class="metric-value">76</td>
+                    <td>6,667</td>
+                    <td>1.1%</td>
+                    <td>8.8</td>
+                </tr>
+                <tr>
+                    <td><strong>/outils/conversions-dhumidite/</strong></td>
+                    <td class="metric-value">47</td>
+                    <td>1,080</td>
+                    <td style="color: var(--success); font-weight: 600;">4.4%</td>
+                    <td>9.0</td>
+                </tr>
+                <tr>
+                    <td>/ (Homepage FR)</td>
+                    <td class="metric-value">16</td>
+                    <td>130</td>
+                    <td style="color: var(--success); font-weight: 600;">12.3%</td>
+                    <td>9.7</td>
+                </tr>
+                <tr style="background: #DCFCE7;">
+                    <td><strong>/pdf/Hermeticity_of_Electronic_Packages.pdf</strong></td>
+                    <td class="metric-value">12</td>
+                    <td>442</td>
+                    <td style="color: var(--success); font-weight: 600;">2.7%</td>
+                    <td>11.0</td>
+                </tr>
+                <tr>
+                    <td>/en/hermeticity/gross-leak-test/</td>
+                    <td class="metric-value">7</td>
+                    <td>1,107</td>
+                    <td>0.6%</td>
+                    <td>9.1</td>
+                </tr>
+                </tbody>
+                <tbody class="hidden-rows">
+                <tr style="background: #DCFCE7;">
+                    <td><strong>/pdf/Hydrogen_Desorption_From_Packaging_Alloy.pdf</strong></td>
+                    <td class="metric-value">5</td>
+                    <td>192</td>
+                    <td style="color: var(--success); font-weight: 600;">2.6%</td>
+                    <td>7.6</td>
+                </tr>
+                <tr style="background: #DCFCE7;">
+                    <td><strong>/pdf/ORS France - Interpretation of RGA Data.pdf</strong></td>
+                    <td class="metric-value">4</td>
+                    <td>254</td>
+                    <td>1.6%</td>
+                    <td>8.2</td>
+                </tr>
+                <tr>
+                    <td>/en/ (Homepage EN)</td>
+                    <td class="metric-value">3</td>
+                    <td>575</td>
+                    <td>0.5%</td>
+                    <td>7.4</td>
+                </tr>
+                <tr style="background: #DCFCE7;">
+                    <td><strong>/pdf/ORS France - Cylinder Instructions Of Use.pdf</strong></td>
+                    <td class="metric-value">3</td>
+                    <td>108</td>
+                    <td style="color: var(--success); font-weight: 600;">2.8%</td>
+                    <td>11.9</td>
+                </tr>
+                <tr>
+                    <td>/outils/evolution-du-contenu-gazeux/</td>
+                    <td class="metric-value">3</td>
+                    <td>86</td>
+                    <td style="color: var(--success); font-weight: 600;">3.5%</td>
+                    <td>8.5</td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="expand-button" onclick="toggleTable('pagesTable')">
+                <span class="expand-text">Show more pages (5 more)</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <div class="insight-box">
+            <strong>📌 PAGE INSIGHTS</strong>
+            <p>
+            <ul style="margin: 1rem 0 1.5rem 2rem;">
+                <li>The <strong>Moisture Calculator</strong> maintained its leadership with 76 clicks (stable vs March) and grew impressions to 6,667 (+1,120).</li>
+                <li>The <strong>Humidity Conversion Tool</strong> saw clicks decrease (-19) but improved its position significantly to 9.0 (vs 14.7 in March) — a strong ranking gain that should support future traffic.</li>
+                <li>The <strong>French Homepage</strong> grew clicks to 16 (+5) with a strong 12.3% CTR.</li>
+                <li>Technical <strong>PDF documents</strong> remain key authority assets, with <em>Hermeticity of Electronic Packages</em> (+2 clicks) and <em>Hydrogen Desorption From Packaging Alloy</em> (+1 click) continuing to attract qualified traffic.</li>
+            </ul>
+            <strong style="color: var(--success);">✔ Growth Opportunity:</strong> Tool pages remain the site's strongest SEO assets,
+            while strategic service pages continue to build ranking momentum. Technical PDFs continue to demonstrate their value as
+            authority-building content and remain strong candidates for future optimized landing pages.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Priorities -->
+<section id="priorities">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Strategic Priorities</h2>
+            <p class="section-subtitle">Recommendations for the coming months</p>
+        </div>
+
+        <div class="priorities-grid">
+            <div class="priority-card">
+                <div class="priority-number" style="background: var(--gradient-primary);">1</div>
+                <div class="priority-content">
+                    <h3>Improve CTR on High-Impression Pages</h3>
+                    <p>April's CTR drop to 1.20% (vs 1.50% in March) highlights that improved visibility alone does not
+                        translate into traffic. Optimizing titles and meta descriptions on high-impression technical pages
+                        is the priority lever as the site enters a more mature SEO phase.</p>
+                </div>
+            </div>
+
+            <div class="priority-card">
+                <div class="priority-number" style="background: var(--gradient-accent);">2</div>
+                <div class="priority-content">
+                    <h3>Strengthen Internal Linking</h3>
+                    <p>With engagement reaching its highest level (pages per session 1.40, session duration 3:14),
+                        the time is right to deepen internal linking between tool pages, service pages, and technical PDF
+                        content to extend visit depth and consolidate topical authority.</p>
+                </div>
+            </div>
+
+            <div class="priority-card">
+                <div class="priority-number" style="background: linear-gradient(135deg, #059669 0%, #10B981 100%);">3</div>
+                <div class="priority-content">
+                    <h3>Continue Optimizing Tool Pages</h3>
+                    <p>The Moisture Calculator and Humidity Conversion Tool remain the site's strongest organic assets.
+                        The latter's ranking jump to position 9 (vs 14.7) confirms that further optimization can compound
+                        already strong performance.</p>
+                </div>
+            </div>
+
+            <div class="priority-card">
+                <div class="priority-number" style="background: linear-gradient(135deg, #64748B 0%, #94A3B8 100%);">4</div>
+                <div class="priority-content">
+                    <h3>Leverage Technical PDF Content</h3>
+                    <p>Transform key PDF documents into optimized landing pages integrated within the site architecture
+                        to enhance SEO impact and lead generation potential — starting with <em>Variable_leak_rate_phenomena_in_glass_to_metal_seals.pdf</em>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-radius: 16px; padding: 2rem; margin-top: 3rem; text-align: center;">
+            <h3 style="color: #78350F; font-size: 1.5rem; margin-bottom: 1rem;">Success Metrics for 2026</h3>
+            <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; color: #92400E; font-weight: 600;">
+                <span>CTR &gt; 1.5% ⚠️ (1.20%)</span>
+                <span>Bounce rate &lt; 70% ✅ (64.23%)</span>
+                <span>Position &lt; 14 ✅ (10)</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Conclusion -->
+<section id="conclusion">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Conclusion</h2>
+        </div>
+
+        <div class="conclusion">
+            <p>April confirms the overall <strong>stabilization</strong> of the site's SEO performance following the
+                fluctuations observed earlier in the year. Traffic levels remained relatively consistent across the
+                main acquisition channels, while direct traffic and paid search both increased during the month.</p>
+
+            <p>The most notable evolution in April concerns <strong>engagement quality</strong>. Nearly all engagement
+                indicators improved significantly, including engagement rate (35.77%), pages per session (1.40), and
+                especially average session duration, which nearly doubled to <strong>3:14</strong>. These results suggest
+                that ORS Labs continues to attract highly qualified technical audiences who interact more deeply with the content.</p>
+
+            <p>From an <strong>SEO</strong> perspective, rankings remained stable at one of the best levels observed in
+                the reporting period (position 10), and impressions continued to grow slightly. However, clicks and
+                organic sessions declined compared with March, showing that improved visibility alone does not systematically
+                translate into traffic gains. This highlights the growing importance of <strong>CTR optimization</strong>
+                and SERP attractiveness as the site enters a more mature SEO phase.</p>
+
+            <p>Technical and tool-based content continues to drive the strongest performance. The <strong>Moisture
+                Calculator</strong> and <strong>Humidity Conversion Tool</strong> remain key acquisition assets, while
+                strategic service pages such as <strong>Gross Leak Test</strong> continue to strengthen their ranking foundations.</p>
+
+            <p>Technical <strong>PDF documents</strong> also remain valuable authority assets. Their continued visibility
+                reinforces the strategic opportunity to transform the most relevant PDFs into optimized HTML landing pages
+                capable of improving internal linking, strengthening topical authority, and generating more qualified
+                conversion pathways.</p>
+
+            <h3>Actions</h3>
+            <ol style="margin: 1rem 0 1.5rem 2rem;">
+                <li><strong>Publish the proposed content</strong> (sent in December) on /outils/conversions-dhumidite/
+                    page (French and English versions) <em>— Status: paused, waiting approval from ORS Labs</em>
+                </li>
+                <li><strong>Rework the content</strong> of the /tests-dhermeticite/hshld/ page based on the new proposed
+                    structure <em>— Status: paused, waiting structure approval from ORS Labs</em>
+                </li>
+                <li><strong>Identify high-visibility PDF documents</strong> and prioritize their conversion into structured
+                    HTML pages — starting with Variable_leak_rate_phenomena_in_glass_to_metal_seals.pdf
+                    <em>— Status: paused, waiting approval from ORS Labs regarding the proposal</em>
+                </li>
+                <li><strong>Publish the proposed meta data for Gross Leak Test page</strong>
+                    <em>— Status: paused, waiting approval from ORS Labs</em>
+                </li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p><strong>By:</strong><a href="https://cdizign.com" target="_blank" rel="noopener noreferrer"
+                                  style="color: white; font-style: italic; text-decoration: none"> cDizign.com</a></p>
+        <p><strong>Report Period:</strong> April 1-30, 2026 | <strong>Next Review:</strong> June 2026</p>
+    </div>
+</footer>
+
+<script>
+    // Toggle expandable tables
+    function toggleTable(tableId) {
+        const table = document.getElementById(tableId);
+        const button = table.querySelector('.expand-button');
+        const expandText = button.querySelector('.expand-text');
+
+        table.classList.toggle('expanded');
+
+        if (table.classList.contains('expanded')) {
+            expandText.textContent = 'Show less';
+        } else {
+            if (tableId === 'keywordsTable') {
+                expandText.textContent = 'Show more keywords (10 more)';
+            } else {
+                expandText.textContent = 'Show more pages (5 more)';
+            }
+        }
+    }
+
+    // Scroll indicator
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('scrollIndicator').style.width = scrolled + '%';
+
+        // Navbar shadow on scroll
+        const navbar = document.getElementById('navbar');
+        if (winScroll > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                window.scrollTo({
+                    top: target.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Animate elements on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.kpi-card, .priority-card, .data-table').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+
+    // Chart.js default configuration
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#64748B';
+
+    // New Users Chart
+    const newUsersCtx = document.getElementById('newUsersChart');
+    if (newUsersCtx) {
+        new Chart(newUsersCtx, {
+            type: 'line',
+            data: {
+                labels: ['Nov 25', 'Dec 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26'],
+                datasets: [{
+                    label: 'New Users',
+                    data: [641, 493, 544, 300, 364, 377],
+                    borderColor: '#06B6D4',
+                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#06B6D4',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#06B6D4',
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toLocaleString();
+                            }
+                        },
+                        grid: {
+                            color: '#F1F5F9'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Impressions Chart
+    const impressionsCtx = document.getElementById('impressionsChart');
+    if (impressionsCtx) {
+        new Chart(impressionsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26'],
+                datasets: [{
+                    label: 'Total Impressions',
+                    data: [28000, 29500, 31000, 33500, 26803, 24476, 24500, 24075, 21000, 21130, 23500, 20500, 24519, 24888, 18135, 16692, 17910, 19222, 20334, 21779, 16946, 17396],
+                    borderColor: '#1E3A8A',
+                    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#1E3A8A',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#1E3A8A',
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toLocaleString();
+                            }
+                        },
+                        grid: {color: '#F1F5F9'}
+                    },
+                    x: {
+                        grid: {display: false},
+                        ticks: {maxRotation: 45, minRotation: 45}
+                    }
+                }
+            }
+        });
+    }
+
+    // Clicks Chart
+    const clicksCtx = document.getElementById('clicksChart');
+    if (clicksCtx) {
+        new Chart(clicksCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26'],
+                datasets: [{
+                    label: 'Total Clicks',
+                    data: [580, 500, 570, 580, 458, 312, 300, 438, 450, 392, 400, 260, 280, 246, 246, 304, 305, 251, 250, 227, 250, 211],
+                    borderColor: '#06B6D4',
+                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#06B6D4',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#06B6D4',
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toLocaleString();
+                            }
+                        },
+                        grid: {color: '#F1F5F9'}
+                    },
+                    x: {
+                        grid: {display: false},
+                        ticks: {maxRotation: 45, minRotation: 45}
+                    }
+                }
+            }
+        });
+    }
+
+    // CTR Chart
+    const ctrCtx = document.getElementById('ctrChart');
+    if (ctrCtx) {
+        new Chart(ctrCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26'],
+                datasets: [{
+                    label: 'Average CTR (%)',
+                    data: [2.1, 1.7, 1.84, 1.73, 1.71, 1.30, 1.22, 1.80, 2.14, 1.90, 1.70, 1.27, 1.14, 0.99, 1.36, 1.82, 1.70, 1.30, 1.20, 1.00, 1.50, 1.20],
+                    borderColor: '#059669',
+                    backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#059669',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#059669',
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function (context) {
+                                return 'CTR: ' + context.parsed.y.toFixed(2) + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toFixed(1) + '%';
+                            }
+                        },
+                        grid: {color: '#F1F5F9'}
+                    },
+                    x: {
+                        grid: {display: false},
+                        ticks: {maxRotation: 45, minRotation: 45}
+                    }
+                }
+            }
+        });
+    }
+
+    // Position Chart (inverted - lower is better)
+    const positionCtx = document.getElementById('positionChart');
+    if (positionCtx) {
+        new Chart(positionCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26', 'Mar 26', 'Apr 26'],
+                datasets: [{
+                    label: 'Average Position',
+                    data: [27, 28, 30, 31, 31, 31, 23, 21, 22, 29, 28, 29, 31, 31, 22, 12, 14, 16, 15, 13, 10, 10],
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#F59E0B',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        backgroundColor: '#F59E0B',
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function (context) {
+                                return 'Position: ' + context.parsed.y.toFixed(1);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        reverse: true,
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return value.toFixed(0);
+                            }
+                        },
+                        grid: {color: '#F1F5F9'}
+                    },
+                    x: {
+                        grid: {display: false},
+                        ticks: {maxRotation: 45, minRotation: 45}
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
