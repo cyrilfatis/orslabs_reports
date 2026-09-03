@@ -11,7 +11,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     {% block stylesheets %}
     <style>
         :root {
@@ -238,6 +240,11 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('app_documents_index') }}" class="navbar-link">
                             <i class="fas fa-folder-open" style="margin-right:0.3rem;font-size:0.85em"></i>Médiathèque
+                        </a></li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('app_mailing_index') }}" class="navbar-link">
+                            <i class="fas fa-envelope" style="margin-right:0.3rem;font-size:0.85em"></i>Mailing
                         </a></li>
                 {% endif %}
             </ul>

@@ -1,0 +1,484 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mailing – ORS Labs{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.page-subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.25rem; }
+
+/* ── LAYOUT 2 COLONNES ───────────────────────── */
+.mailing-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+@media (max-width: 900px) {
+    .mailing-layout { grid-template-columns: 1fr; }
+}
+
+/* ── LISTE ────────────────────────────────────── */
+.mailing-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-height: calc(100vh - 260px);
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+.mailing-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.mailing-item:hover { box-shadow: 0 2px 12px rgba(30,58,138,0.08); }
+.mailing-item.active { border-color: var(--primary-light); background: #EFF6FF; }
+.mailing-icon {
+    width: 38px; height: 38px; flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--gradient-primary);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+}
+.mailing-info { flex: 1; min-width: 0; }
+.mailing-name { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mailing-meta { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.15rem; }
+.mailing-track {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.75rem; color: var(--accent-dark); margin-top: 0.3rem;
+    text-decoration: none;
+}
+.mailing-track:hover { text-decoration: underline; }
+.pending-label { color: var(--warning); font-weight: 600; }
+.mailing-actions { display: flex; flex-direction: column; gap: 0.4rem; flex-shrink: 0; }
+.mailing-action-btn {
+    width: 28px; height: 28px; flex-shrink: 0;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: white; color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 0.8rem; transition: all 0.2s;
+}
+.mailing-action-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }
+.mailing-action-btn.danger:hover { background: var(--danger); border-color: var(--danger); color: white; }
+
+/* ── PREVIEW ──────────────────────────────────── */
+.preview-panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: calc(100vh - 260px);
+    display: flex;
+    flex-direction: column;
+}
+.preview-header {
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.preview-title { font-weight: 700; font-size: 1rem; }
+.preview-sub { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.1rem; }
+.preview-frame-wrap { flex: 1; }
+.preview-frame { width: 100%; height: 100%; min-height: calc(100vh - 340px); border: none; display: block; }
+.preview-empty {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    padding: 3rem 1rem;
+}
+.preview-empty i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+
+/* ── MODAL NOUVEAU MAILING ───────────────────── */
+.modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+}
+.modal-backdrop.open { display: flex; }
+.modal-box {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.modal-box h3 { margin-bottom: 1.25rem; font-size: 1.1rem; }
+.modal-label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--text-primary); }
+.modal-input {
+    width: 100%; padding: 0.6rem 0.85rem;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-family: inherit; font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+.modal-input:focus { outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+.modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">📧 Mailing</h1>
+        <p class="page-subtitle">Historique des campagnes emailing — accès administrateur uniquement</p>
+    </div>
+    <button class="btn btn-secondary" onclick="openNewMailingModal()">
+        <i class="fas fa-plus"></i> Nouveau mailing
+    </button>
+</div>
+
+<div class="mailing-layout">
+    {# ── LISTE ─────────────────────────────────────────────────────── #}
+    <div class="mailing-list" id="mailingList">
+        {% if mailings is empty %}
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-envelope-open-text"></i>
+            <p>Aucun mailing enregistré.</p>
+        </div>
+        {% else %}
+        {% for mailing in mailings %}
+            {{ _self.renderMailingItem(mailing) }}
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    {# ── APERÇU ────────────────────────────────────────────────────── #}
+    <div class="preview-panel" id="previewPanel">
+        <div class="preview-empty" id="previewEmpty">
+            <i class="fas fa-eye"></i>
+            <p>Sélectionnez un mailing dans la liste pour afficher son aperçu.</p>
+        </div>
+    </div>
+</div>
+
+{# ── MACRO ITEM ────────────────────────────────────────────────────── #}
+{% macro renderMailingItem(mailing) %}
+<div class="mailing-item" id="mailingItem-{{ mailing.id }}"
+     data-content-url="{{ path('app_mailing_content', {id: mailing.id}) }}"
+     data-edit-url="{{ path('app_mailing_edit', {id: mailing.id}) }}"
+     data-title="{{ mailing.title|e('html_attr') }}"
+     data-sent-at="{{ mailing.sentAt ? mailing.sentAt|date('d/m/Y') : '' }}"
+     data-sent-at-iso="{{ mailing.sentAt ? mailing.sentAt|date('Y-m-d') : '' }}"
+     data-tracking-url="{{ mailing.trackingUrl ?? '' }}"
+     onclick="selectMailing(this)">
+    <div class="mailing-icon"><i class="fas fa-envelope"></i></div>
+    <div class="mailing-info">
+        <div class="mailing-name" title="{{ mailing.title }}">{{ mailing.title }}</div>
+        <div class="mailing-meta">
+            {% if mailing.sentAt %}Envoyé le {{ mailing.sentAt|date('d/m/Y') }}{% else %}<span class="pending-label">Campagne en attente</span>{% endif %}
+        </div>
+        {% if mailing.trackingUrl %}
+        <a href="{{ mailing.trackingUrl }}" target="_blank" rel="noopener" class="mailing-track" onclick="event.stopPropagation()">
+            <i class="fas fa-link"></i> Lien de tracking
+        </a>
+        {% endif %}
+    </div>
+    <div class="mailing-actions">
+        <button class="mailing-action-btn" title="Modifier" onclick="event.stopPropagation(); openEditModal(this.closest('.mailing-item'))">
+            <i class="fas fa-pen"></i>
+        </button>
+        <button class="mailing-action-btn danger" title="Supprimer" onclick="event.stopPropagation(); deleteMailing({{ mailing.id }}, '{{ mailing.title|e('js') }}', this)">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</div>
+{% endmacro %}
+
+{# ── MODAL NOUVEAU MAILING ─────────────────────────────────────────── #}
+<div class="modal-backdrop" id="newMailingModal">
+    <div class="modal-box">
+        <h3>✨ Nouveau mailing</h3>
+        <label class="modal-label">Titre *</label>
+        <input class="modal-input" type="text" id="mailingTitle" placeholder="ex: Newsletter Septembre 2026">
+
+        <label class="modal-label">Fichier HTML *</label>
+        <input class="modal-input" type="file" id="mailingFile" accept=".html,.htm">
+
+        <label class="modal-label">Date d'envoi</label>
+        <input class="modal-input" type="date" id="mailingSentAt">
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:-0.6rem;margin-bottom:1rem">
+            Laisser vide si la campagne n'a pas encore été envoyée — elle apparaîtra comme « Campagne en attente ».
+        </p>
+
+        <label class="modal-label">Lien de tracking</label>
+        <input class="modal-input" type="url" id="mailingTrackingUrl" placeholder="https://...">
+
+        <div class="modal-actions">
+            <button class="btn btn-primary" style="padding:0.5rem 1.2rem;font-size:0.9rem" onclick="submitNewMailing()">
+                Ajouter
+            </button>
+            <button class="btn" style="padding:0.5rem 1rem;background:var(--border);color:var(--text-primary);font-size:0.9rem"
+                    onclick="document.getElementById('newMailingModal').classList.remove('open')">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
+{# ── MODAL ÉDITION MAILING ─────────────────────────────────────────── #}
+<div class="modal-backdrop" id="editMailingModal">
+    <div class="modal-box">
+        <h3>✏️ Modifier le mailing</h3>
+        <label class="modal-label">Titre *</label>
+        <input class="modal-input" type="text" id="editMailingTitle">
+
+        <label class="modal-label">Date d'envoi</label>
+        <input class="modal-input" type="date" id="editMailingSentAt">
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:-0.6rem;margin-bottom:1rem">
+            Laisser vide si la campagne n'a pas encore été envoyée — elle apparaîtra comme « Campagne en attente ».
+        </p>
+
+        <label class="modal-label">Lien de tracking</label>
+        <input class="modal-input" type="url" id="editMailingTrackingUrl" placeholder="https://...">
+
+        <div class="modal-actions">
+            <button class="btn btn-primary" style="padding:0.5rem 1.2rem;font-size:0.9rem" onclick="submitEditMailing()">
+                Enregistrer
+            </button>
+            <button class="btn" style="padding:0.5rem 1rem;background:var(--border);color:var(--text-primary);font-size:0.9rem"
+                    onclick="document.getElementById('editMailingModal').classList.remove('open')">
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+// ── SÉLECTION / APERÇU ───────────────────────────────────────────────
+function selectMailing(el) {
+    document.querySelectorAll('.mailing-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+
+    const title = el.dataset.title;
+    const trackingUrl = el.dataset.trackingUrl;
+    const contentUrl = el.dataset.contentUrl;
+
+    const panel = document.getElementById('previewPanel');
+    panel.innerHTML = `
+        <div class="preview-header">
+            <div>
+                <div class="preview-title">${escHtml(title)}</div>
+                <div class="preview-sub">${sentAtLabel(el.dataset.sentAt)}</div>
+            </div>
+            ${trackingUrl ? `<a href="${escHtml(trackingUrl)}" target="_blank" rel="noopener" class="btn btn-secondary" style="padding:0.5rem 1rem;font-size:0.85rem"><i class="fas fa-link"></i> Lien de tracking</a>` : ''}
+        </div>
+        <div class="preview-frame-wrap">
+            <iframe class="preview-frame" src="${contentUrl}" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
+        </div>`;
+}
+
+// ── NOUVEAU MAILING ───────────────────────────────────────────────────
+function openNewMailingModal() {
+    document.getElementById('mailingTitle').value = '';
+    document.getElementById('mailingFile').value = '';
+    document.getElementById('mailingSentAt').value = '';
+    document.getElementById('mailingTrackingUrl').value = '';
+    document.getElementById('newMailingModal').classList.add('open');
+}
+
+function submitNewMailing() {
+    const title = document.getElementById('mailingTitle').value.trim();
+    const fileInput = document.getElementById('mailingFile');
+    const sentAt = document.getElementById('mailingSentAt').value;
+    const trackingUrl = document.getElementById('mailingTrackingUrl').value.trim();
+
+    if (!title) { alert('Le titre est obligatoire.'); return; }
+    if (!fileInput.files.length) { alert('Le fichier HTML est obligatoire.'); return; }
+
+    const fd = new FormData();
+    fd.append('title', title);
+    fd.append('file', fileInput.files[0]);
+    fd.append('sent_at', sentAt);
+    fd.append('tracking_url', trackingUrl);
+
+    fetch('{{ path('app_mailing_upload') }}', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('newMailingModal').classList.remove('open');
+            appendMailingItem(data.mailing);
+            showFlash('success', `"${data.mailing.title}" ajouté avec succès.`);
+        } else {
+            showFlash('error', data.error ?? 'Erreur lors de l\'ajout.');
+        }
+    })
+    .catch(() => showFlash('error', 'Erreur réseau lors de l\'ajout.'));
+}
+
+function appendMailingItem(mailing) {
+    const list = document.getElementById('mailingList');
+    const empty = document.getElementById('emptyState');
+    if (empty) empty.remove();
+
+    const div = document.createElement('div');
+    div.className = 'mailing-item';
+    div.id = 'mailingItem-' + mailing.id;
+    div.onclick = () => selectMailing(div);
+    applyMailingData(div, mailing);
+    list.prepend(div);
+    selectMailing(div);
+}
+
+// ── ÉDITION ────────────────────────────────────────────────────────────
+let editingMailingItem = null;
+
+function openEditModal(itemEl) {
+    editingMailingItem = itemEl;
+    document.getElementById('editMailingTitle').value = itemEl.dataset.title;
+    document.getElementById('editMailingSentAt').value = itemEl.dataset.sentAtIso || '';
+    document.getElementById('editMailingTrackingUrl').value = itemEl.dataset.trackingUrl || '';
+    document.getElementById('editMailingModal').classList.add('open');
+}
+
+function submitEditMailing() {
+    if (!editingMailingItem) return;
+
+    const title = document.getElementById('editMailingTitle').value.trim();
+    const sentAt = document.getElementById('editMailingSentAt').value;
+    const trackingUrl = document.getElementById('editMailingTrackingUrl').value.trim();
+
+    if (!title) { alert('Le titre est obligatoire.'); return; }
+
+    const fd = new FormData();
+    fd.append('title', title);
+    fd.append('sent_at', sentAt);
+    fd.append('tracking_url', trackingUrl);
+
+    fetch(editingMailingItem.dataset.editUrl, { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('editMailingModal').classList.remove('open');
+            const wasActive = editingMailingItem.classList.contains('active');
+            applyMailingData(editingMailingItem, data.mailing);
+            if (wasActive) selectMailing(editingMailingItem);
+            showFlash('success', `"${data.mailing.title}" mis à jour.`);
+            editingMailingItem = null;
+        } else {
+            showFlash('error', data.error ?? 'Erreur lors de la modification.');
+        }
+    })
+    .catch(() => showFlash('error', 'Erreur réseau lors de la modification.'));
+}
+
+// ── RENDU COMMUN D'UN ITEM ──────────────────────────────────────────────
+function applyMailingData(div, mailing) {
+    div.dataset.contentUrl = mailing.contentUrl;
+    div.dataset.editUrl = mailing.editUrl;
+    div.dataset.title = mailing.title;
+    div.dataset.sentAt = mailing.sentAt ?? '';
+    div.dataset.sentAtIso = mailing.sentAtIso ?? '';
+    div.dataset.trackingUrl = mailing.trackingUrl ?? '';
+    div.innerHTML = `
+        <div class="mailing-icon"><i class="fas fa-envelope"></i></div>
+        <div class="mailing-info">
+            <div class="mailing-name" title="${escHtml(mailing.title)}">${escHtml(mailing.title)}</div>
+            <div class="mailing-meta">${sentAtLabel(mailing.sentAt, true)}</div>
+            ${mailing.trackingUrl ? `<a href="${escHtml(mailing.trackingUrl)}" target="_blank" rel="noopener" class="mailing-track" onclick="event.stopPropagation()"><i class="fas fa-link"></i> Lien de tracking</a>` : ''}
+        </div>
+        <div class="mailing-actions">
+            <button class="mailing-action-btn" title="Modifier" onclick="event.stopPropagation(); openEditModal(this.closest('.mailing-item'))">
+                <i class="fas fa-pen"></i>
+            </button>
+            <button class="mailing-action-btn danger" title="Supprimer" onclick="event.stopPropagation(); deleteMailing(${mailing.id}, '${escJs(mailing.title)}', this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+}
+
+function sentAtLabel(sentAt, asHtml) {
+    if (!sentAt) return asHtml ? '<span class="pending-label">Campagne en attente</span>' : 'Campagne en attente';
+    return `Envoyé le ${sentAt}`;
+}
+
+// ── SUPPRESSION ────────────────────────────────────────────────────────
+function deleteMailing(id, title, btn) {
+    if (!confirm(`Supprimer "${title}" ?\n\nCette action est définitive.`)) return;
+
+    btn.disabled = true;
+
+    fetch('{{ path('app_mailing_delete', {id: '__ID__'}) }}'.replace('__ID__', id), {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            const item = document.getElementById('mailingItem-' + id);
+            const list = item.parentElement;
+            item.remove();
+
+            const panel = document.getElementById('previewPanel');
+            if (panel.querySelector('.preview-frame')) {
+                panel.innerHTML = `
+                    <div class="preview-empty" id="previewEmpty">
+                        <i class="fas fa-eye"></i>
+                        <p>Sélectionnez un mailing dans la liste pour afficher son aperçu.</p>
+                    </div>`;
+            }
+
+            if (list.children.length === 0) {
+                list.innerHTML = `<div class="empty-state" id="emptyState">
+                    <i class="fas fa-envelope-open-text"></i><p>Aucun mailing enregistré.</p>
+                </div>`;
+            }
+            showFlash('success', `"${title}" supprimé.`);
+        } else {
+            showFlash('error', data.error ?? 'Erreur lors de la suppression.');
+            btn.disabled = false;
+        }
+    });
+}
+
+// ── UTILITAIRES ───────────────────────────────────────────────────────
+function showFlash(type, msg) {
+    const container = document.querySelector('main.container') || document.body;
+    const div = document.createElement('div');
+    div.className = `alert alert-${type}`;
+    div.textContent = msg;
+    container.insertBefore(div, container.firstChild);
+    setTimeout(() => { div.style.opacity = '0'; div.style.transition = 'opacity 0.5s'; setTimeout(() => div.remove(), 500); }, 4000);
+}
+function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escJs(str) {
+    return String(str).replace(/'/g,"\\'").replace(/\n/g,' ');
+}
+</script>
+{% endblock %}
